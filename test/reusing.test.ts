@@ -1,5 +1,5 @@
 import Starman from '..'
-import { StarmanRequestStep } from '../request'
+import { StarmanRequestStep } from '../request';
 
 const PingRequest = new StarmanRequestStep('Status 200')
   .Get('https://www.{{url}}')

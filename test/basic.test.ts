@@ -1,11 +1,10 @@
 
-import Starman from '..'
-import { StarmanRequestStep } from '../request';
+import * as Starman from '..'
 
 
-Starman([(runner) => {
+Starman.default([(runner) => {
   runner("Google should be alive", [
-      new StarmanRequestStep("Status 200").Get("https://www.{{url}}").AddTest((pm) => {
+      new Starman.StarmanRequestStep("Status 200").Get("https://www.{{url}}").AddTest((pm) => {
         pm.response.to.have.status(200)
       })
   ])
