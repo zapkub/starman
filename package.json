@@ -1,0 +1,21 @@
+{
+  "name": "starman",
+  "version": "0.0.1",
+  "description": "If we can sparkle he may land tonight",
+  "main": "index.js",
+  "repository": {
+    "type": "github",
+    "url": "https://github.com/zapkub/starman"
+  },
+  "scripts": {
+    "build": "tsc",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Rungsikorn.R",
+  "license": "MIT",
+  "dependencies": {
+    "@types/node": "^11.11.5",
+    "newman": "^4.4.0",
+    "typescript": "^3.3.4000"
+  }
+}
