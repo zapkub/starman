@@ -63,7 +63,7 @@ export function CreatePostmanCollectionItemFromStarmanRequest(step: StarmanStep)
                 listen: "test",
                 script: {
                     type: "text/javascript",
-                    exec: Array.isArray(step.test) ? step.test.filter(t => t).map(t => `(${t})();`) : "(" + step.test.toString() + ")()",
+                    exec: Array.isArray(step.test) ? step.test.filter(t => t).map(t => `(${t})(pm);`) : "(" + step.test.toString() + ")(pm)",
                 }
             } : {
                 listen: "test",
