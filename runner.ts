@@ -25,7 +25,7 @@ export interface StarmanStep {
 
 export function CreatePostmanEnvFromStarmanEnv(envs: StarmanEnvironmentVariables) {
     return {
-        "name": "Solar API variables for Local E2E testing",
+        name: "API variables for testing",
         values:
             Object.keys(envs).map(k => {
                 return {
@@ -37,12 +37,8 @@ export function CreatePostmanEnvFromStarmanEnv(envs: StarmanEnvironmentVariables
                     },
                     enabled: true,
                 }
-            })
-        ,
-        "id": "bcd28ee2-5a3c-42bd-8f47-77cfcf213d20",
-        "_postman_variable_scope": "environment",
-        "_postman_exported_at": "2019-01-30T11:09:09.947Z",
-        "_postman_exported_using": "Postman/6.7.2"
+            }),
+        id: "bcd28ee2-5a3c-42bd-8f47-77cfcf213d20",
     }
 
 }

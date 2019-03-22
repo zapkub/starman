@@ -9,7 +9,7 @@
   },
   "scripts": {
     "build": "tsc",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "tsc && STARMAN_RESULT_DIR=./test node test/basic.test.js"
   },
   "author": "Rungsikorn.R",
   "license": "MIT",

@@ -37,8 +37,8 @@ export default function Starman(steps: ((runner: StarmanRunner)=>void)[], enviro
         }
 
         if (typeof process.env["STARMAN_RESULT_DIR"] === "string") {
-            fs.writeFileSync(path.join(process.env["STARMAN_RESULT_DIR"], "./result/postman.collection.json"),JSON.stringify(collection,null, " "))
-            fs.writeFileSync(path.join(process.env["STARMAN_RESULT_DIR"], "./result/postman.variables.json"),JSON.stringify(env, null, " "))
+            fs.writeFileSync(path.join(process.env["STARMAN_RESULT_DIR"], "./postman.collection.json"),JSON.stringify(collection,null, " "))
+            fs.writeFileSync(path.join(process.env["STARMAN_RESULT_DIR"], "./postman.variables.json"),JSON.stringify(env, null, " "))
         }
 
     })
