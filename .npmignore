@@ -3,3 +3,5 @@
 !*.js
 !*.d.ts
 test
+tsconfig.json
+readme.md
