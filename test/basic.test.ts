@@ -1,13 +1,27 @@
+import Starman from '..'
+import { join } from 'path'
+import { StarmanRequestStep } from '..'
 
-import * as Starman from '..'
-
-
-Starman.default([(runner) => {
-  runner("Google should be alive", [
-      new Starman.StarmanRequestStep("Status 200").Get("https://www.{{url}}").AddTest((pm) => {
-        pm.response.to.have.status(200)
-      })
-  ])
-}], {
-  url: "google.com"
-})
+Starman(
+  [
+    runner => {
+      runner('Google should be alive', [
+        // << This is folder name
+        new StarmanRequestStep('Just call google.com') // << This is request name
+          .Get('https://www.{{url}}')
+          .AddTest(pm => {
+            pm.test('Google.com must return 200 status', () => {
+              // << Write test here !
+              pm.response.to.have.status(200)
+            })
+          })
+      ])
+    }
+  ],
+  {
+    url: 'google.com'
+  },
+  {
+    outputDir: join(__dirname, './basic-collections'),
+  }
+)

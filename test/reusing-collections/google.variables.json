@@ -1,0 +1,15 @@
+{
+ "name": "google",
+ "values": [
+  {
+   "key": "url",
+   "value": "google.com",
+   "description": {
+    "content": "",
+    "type": "text/plain"
+   },
+   "enabled": true
+  }
+ ],
+ "id": "bcd28ee2-5a3c-42bd-8f47-77cfcf213d20"
+}

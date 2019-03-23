@@ -1,0 +1,33 @@
+{
+ "info": {
+  "name": "facebook",
+  "descriptions": "",
+  "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+ },
+ "item": [
+  {
+   "name": "facebook should be alive",
+   "item": [
+    {
+     "name": "Status 200",
+     "event": [
+      {
+       "listen": "test",
+       "script": {
+        "type": "text/javascript",
+        "exec": [
+         "(function (pm) {\n    pm.response.to.have.status(200);\n})(pm);"
+        ]
+       }
+      }
+     ],
+     "request": {
+      "url": "https://www.{{url}}",
+      "method": "GET",
+      "header": []
+     }
+    }
+   ]
+  }
+ ]
+}

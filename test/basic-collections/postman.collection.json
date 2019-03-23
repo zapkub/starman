@@ -1,0 +1,33 @@
+{
+ "info": {
+  "name": "API Collections E2E testing",
+  "descriptions": "",
+  "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+ },
+ "item": [
+  {
+   "name": "Google should be alive",
+   "item": [
+    {
+     "name": "Just call google.com",
+     "event": [
+      {
+       "listen": "test",
+       "script": {
+        "type": "text/javascript",
+        "exec": [
+         "(function (pm) {\n                pm.test('Google.com must return 200 status', function () {\n                    // << Write test here !\n                    pm.response.to.have.status(200);\n                });\n            })(pm);"
+        ]
+       }
+      }
+     ],
+     "request": {
+      "url": "https://www.{{url}}",
+      "method": "GET",
+      "header": []
+     }
+    }
+   ]
+  }
+ ]
+}
