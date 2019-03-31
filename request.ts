@@ -1,49 +1,73 @@
-import { StarmanStep, StarmanRequestMethod, StarmanStepBody } from "./runner";
+import { StarmanStep, StarmanRequestMethod, StarmanStepBody } from './runner'
+import { stringify } from 'querystring'
 
 export class StarmanRequestStep implements StarmanStep {
-    name = ""
-    test = []
-    request: StarmanStep['request'] = {
-        url: "",
-        method: 'GET' as StarmanRequestMethod,
-        header: []
+  name = ''
+  test = []
+  request: StarmanStep['request'] = {
+    url: '',
+    method: 'GET' as StarmanRequestMethod,
+    header: []
+  }
+  query: string
+  constructor(name: string) {
+    this.name = name
+  }
+  private reloadURL() {
+    if (this.query) {
+      this.request.url = `${this.request.url}?${this.query}`
     }
-    constructor(name: string) {
-        this.name = name
-    }
-    Get(url: string) {
-        this.request.url = url
-        this.request.method = 'GET'
-        return this
-    }
-    Post(url: string) {
-        this.request.url = url
-        this.request.method = 'POST'
-        return this
-    }
-    Put(url: string) {
-        this.request.url = url
-        this.request.method = 'PUT'
-        return this
-    }
-    Delete(url: string) {
-        this.request.url = url
-        this.request.method = 'DELETE'
-        return this
-    }
-    AddHeader(key: string, value: string) {
-        this.request.header.push({
-            key,
-            value,
-        })
-        return this
-    }
-    AddBody(body: StarmanStepBody) {
-        this.request.body = body
-        return this
-    }
-    AddTest(test: (pm: any) => void) {
-        this.test.push(test)
-        return this
-    }
+  }
+  AddQuery(query: {[key: string]: string}) {
+    this.query = stringify(query)
+    this.request.query = Object.keys(query).map(key => {
+      return {
+        key,
+        value: query[key]
+      }
+    })
+    this.reloadURL()
+    return this
+  }
+  Get(url: string) {
+    this.request.url = url
+    this.request.method = 'GET'
+    this.reloadURL()
+    return this
+  }
+  Post(url: string) {
+    this.request.url = url
+    this.request.method = 'POST'
+    this.reloadURL()
+    return this
+  }
+  Put(url: string) {
+    this.request.url = url
+    this.request.method = 'PUT'
+    this.reloadURL()
+    return this
+  }
+  Delete(url: string) {
+    this.request.url = url
+    this.request.method = 'DELETE'
+    this.reloadURL()
+    return this
+  }
+  AddHeader(key: string, value: string) {
+    this.request.header.push({
+      key,
+      value
+    })
+    return this
+  }
+  AddBody(body: StarmanStepBody) {
+    this.request.body = body
+    return this
+  }
+  AddTest(test: StarmanTestFunc) {
+    this.test.push(test)
+    return this
+  }
 }
+
+export type StarmanTestFunc = (pm: any) => void

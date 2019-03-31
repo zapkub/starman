@@ -14,6 +14,7 @@ export interface StarmanStep {
     test: Function | Function[]
     request: {
         url: string
+        query?: {key: string, value: string}[],
         method: StarmanRequestMethod,
         header:{
             key: string
@@ -52,6 +53,7 @@ export function CreatePostmanCollectionItemFromStarmanRequest(step: StarmanStep)
             raw: JSON.stringify(step.request.body)
         }
     }
+
     return {
         name: step.name,
         event: [

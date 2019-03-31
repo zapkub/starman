@@ -3,11 +3,16 @@
  * - rungsikorn.r@digithunworldwide.com
  */
 
-import { CreatePostmanEnvFromStarmanEnv, CreatePostmanCollectionItemFromStarmanRequest, StarmanRunner, StarmanEnvironmentVariables } from "./runner";
+import {
+  CreatePostmanEnvFromStarmanEnv,
+  CreatePostmanCollectionItemFromStarmanRequest,
+  StarmanRunner,
+  StarmanEnvironmentVariables
+} from './runner'
 
-const fs = require('fs');
-const path = require('path');
-const newman = require('newman');
+const fs = require('fs')
+const path = require('path')
+const newman = require('newman')
 
 interface StarmanRunnerOptions {
   outputDir?: string
@@ -15,41 +20,64 @@ interface StarmanRunnerOptions {
   environmentName?: string
 }
 
-export default function Starman(steps: ((runner: StarmanRunner)=>void)[], environment: StarmanEnvironmentVariables, options: StarmanRunnerOptions = {}) {
-    const collection = {
-        info: {
-            name: options.collectionName || "API Collections E2E testing",
-            descriptions: "",
-            schema: "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
-        },
-        item: [ ]
-    }
-    const env = CreatePostmanEnvFromStarmanEnv(environment)
-    if  (options.environmentName) {
-      env.name = options.environmentName
-    }
-    steps.forEach(p => {
-        p((name, steps) => {
-               collection.item.push({
-                   name: name,
-                   item: steps.map(CreatePostmanCollectionItemFromStarmanRequest)
-               })
-        })
+export default function Starman(
+  steps: ((runner: StarmanRunner) => void)[],
+  environment: StarmanEnvironmentVariables,
+  options: StarmanRunnerOptions = {}
+) {
+  const collection = {
+    info: {
+      name: options.collectionName || 'API Collections E2E testing',
+      descriptions: '',
+      schema:
+        'https://schema.getpostman.com/json/collection/v2.1.0/collection.json'
+    },
+    item: []
+  }
+  const env = CreatePostmanEnvFromStarmanEnv(environment)
+  if (options.environmentName) {
+    env.name = options.environmentName
+  }
+  steps.forEach(p => {
+    p((name, steps) => {
+      collection.item.push({
+        name: name,
+        item: steps.map(CreatePostmanCollectionItemFromStarmanRequest)
+      })
     })
-    newman.run({
-       collection: collection,
-       environment: env,
-        reporters: 'cli',
-    },function(err) {
+  })
+  return new Promise((resolve, reject) => {
+    newman.run(
+      {
+        collection: collection,
+        environment: env,
+        reporters: 'cli'
+      },
+      function(err) {
         if (err) {
-           console.error(err)
+          reject(err)
+        } else {
+          resolve()
         }
-
         if (options.outputDir) {
-            fs.writeFileSync(path.join(options.outputDir, `./${options.collectionName || "postman"}.collection.json`),JSON.stringify(collection,null, " "))
-            fs.writeFileSync(path.join(options.outputDir, `./${options.environmentName || "postman"}.variables.json`),JSON.stringify(env, null, " "))
+          fs.writeFileSync(
+            path.join(
+              options.outputDir,
+              `./${options.collectionName || 'postman'}.collection.json`
+            ),
+            JSON.stringify(collection, null, ' ')
+          )
+          fs.writeFileSync(
+            path.join(
+              options.outputDir,
+              `./${options.environmentName || 'postman'}.variables.json`
+            ),
+            JSON.stringify(env, null, ' ')
+          )
         }
-    })
+      }
+    )
+  })
 }
 
 export * from './request'

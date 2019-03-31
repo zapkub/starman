@@ -6,6 +6,36 @@
  },
  "item": [
   {
+   "name": "Localhost test",
+   "item": [
+    {
+     "name": "Should return query",
+     "event": [
+      {
+       "listen": "test",
+       "script": {
+        "type": "text/javascript",
+        "exec": [
+         "(function (pm) {\n                                    pm.expect(pm.response.json().x).to.be.eql(\"10\");\n                                })(pm);"
+        ]
+       }
+      }
+     ],
+     "request": {
+      "url": "http://localhost:9912/some?x=10",
+      "method": "GET",
+      "header": [],
+      "query": [
+       {
+        "key": "x",
+        "value": "10"
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
    "name": "Google should be alive",
    "item": [
     {
@@ -16,15 +46,21 @@
        "script": {
         "type": "text/javascript",
         "exec": [
-         "(function (pm) {\n                pm.test('Google.com must return 200 status', function () {\n                    // << Write test here !\n                    pm.response.to.have.status(200);\n                });\n            })(pm);"
+         "(function (pm) {\n                                    pm.test('Google.com must return 200 status', function () {\n                                        // << Write test here !\n                                        pm.response.to.have.status(200);\n                                    });\n                                })(pm);"
         ]
        }
       }
      ],
      "request": {
-      "url": "https://www.{{url}}",
+      "url": "https://www.{{url}}?test=19",
       "method": "GET",
-      "header": []
+      "header": [],
+      "query": [
+       {
+        "key": "test",
+        "value": "19"
+       }
+      ]
      }
     }
    ]
