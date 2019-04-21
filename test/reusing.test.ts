@@ -4,10 +4,13 @@ import { join } from 'path'
 
 const PingRequest = new StarmanRequestStep('Status 200')
   .Get('https://www.{{url}}')
+  .AddQuery({
+    v: '{{url}}',
+    b: 'somethingกขอ'
+  })
   .AddTest(pm => {
     pm.response.to.have.status(200)
   })
-
 
 // Both Collection use the same request but different env
 Starman(

@@ -22,9 +22,19 @@
       }
      ],
      "request": {
-      "url": "https://www.{{url}}",
+      "url": "https://www.{{url}}?v={{url}}&b=something%E0%B8%81%E0%B8%82%E0%B8%AD",
       "method": "GET",
-      "header": []
+      "header": [],
+      "query": [
+       {
+        "key": "v",
+        "value": "{{url}}"
+       },
+       {
+        "key": "b",
+        "value": "somethingกขอ"
+       }
+      ]
      }
     }
    ]

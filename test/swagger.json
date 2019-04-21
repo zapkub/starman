@@ -1,0 +1,4442 @@
+{
+  "info": {
+      "contact": {},
+      "license": {}
+  },
+  "paths": {
+      "/auth/_validate/kyc-code": {
+          "get": {
+              "tags": [
+                  "Authentication"
+              ],
+              "summary": "Return result of KYC code and passport ID valid and invalid",
+              "parameters": [
+                  {
+                      "type": "string",
+                      "description": "user passport ID",
+                      "name": "passport_id",
+                      "in": "query",
+                      "required": true
+                  },
+                  {
+                      "type": "string",
+                      "description": "user kyc code",
+                      "name": "kyc_code",
+                      "in": "query",
+                      "required": true
+                  }
+              ],
+              "responses": {
+                  "200": {
+                      "description": "OK",
+                      "schema": {
+                          "type": "string"
+                      }
+                  }
+              }
+          }
+      },
+      "/auth/_validate/otp": {
+          "get": {
+              "tags": [
+                  "Authentication"
+              ],
+              "summary": "Validate Authentication OTP",
+              "parameters": [
+                  {
+                      "type": "string",
+                      "description": "OTP challenge code",
+                      "name": "otp_challenge",
+                      "in": "query",
+                      "required": true
+                  },
+                  {
+                      "type": "string",
+                      "description": "OTP answer code",
+                      "name": "otp_answer",
+                      "in": "query",
+                      "required": true
+                  },
+                  {
+                      "type": "string",
+                      "description": "Mobile number",
+                      "name": "mobile_number",
+                      "in": "query",
+                      "required": true
+                  }
+              ],
+              "responses": {
+                  "200": {
+                      "description": "OK",
+                      "schema": {
+                          "type": "string"
+                      }
+                  }
+              }
+          }
+      },
+      "/auth/_validate/passport": {
+          "get": {
+              "description": "Validate passport ID from use input, intent to use with login page to determine witch authentication type flow will present.",
+              "tags": [
+                  "Authentication"
+              ],
+              "summary": "Check passport ID to display result in UI without submit.",
+              "parameters": [
+                  {
+                      "type": "string",
+                      "description": "Passport ID to verify",
+                      "name": "id",
+                      "in": "query",
+                      "required": true
+                  }
+              ],
+              "responses": {
+                  "200": {
+                      "description": "OK",
+                      "schema": {
+                          "type": "string"
+                      }
+                  }
+              }
+          }
+      },
+      "/auth/_validate/passport-mobile": {
+          "get": {
+              "tags": [
+                  "Authentication"
+              ],
+              "summary": "Validate if Mobile number and passport ID is match.",
+              "parameters": [
+                  {
+                      "type": "string",
+                      "description": "Mobile number (International format eg. +6697123999",
+                      "name": "mobile_number",
+                      "in": "query",
+                      "required": true
+                  },
+                  {
+                      "type": "string",
+                      "description": "Passport ID to validate",
+                      "name": "passport_id",
+                      "in": "query",
+                      "required": true
+                  }
+              ],
+              "responses": {
+                  "200": {
+                      "description": "OK",
+                      "schema": {
+                          "type": "string"
+                      }
+                  }
+              }
+          }
+      },
+      "/auth/_validate/pin": {
+          "get": {
+              "description": "Digits PIN must, Nor a sequence of 7 number and not same repeat number.",
+              "tags": [
+                  "Authentication"
+              ],
+              "summary": "Return security of 6 digits PIN.",
+              "parameters": [
+                  {
+                      "type": "string",
+                      "description": "PIN value to validate security level",
+                      "name": "value",
+                      "in": "query",
+                      "required": true
+                  }
+              ],
+              "responses": {
+                  "200": {
+                      "description": "OK",
+                      "schema": {
+                          "type": "string"
+                      }
+                  }
+              }
+          }
+      },
+      "/auth/otp": {
+          "post": {
+              "description": "Send OTPAnswer SMS to mobile number, both user ID and mobile number should consist in KYC profile database or in User profile service if user have already login \u003e 1 time",
+              "consumes": [
+                  "application/json"
+              ],
+              "produces": [
+                  "application/json"
+              ],
+              "tags": [
+                  "Authentication"
+              ],
+              "summary": "Send OTP to user.",
+              "parameters": [
+                  {
+                      "description": "Body",
+                      "name": "input",
+                      "in": "body",
+                      "required": true,
+                      "schema": {
+                          "type": "object",
+                          "$ref": "#/definitions/endpoints.PostOTPRequest"
+                      }
+                  }
+              ],
+              "responses": {
+                  "201": {
+                      "description": "Created",
+                      "schema": {
+                          "type": "object",
+                          "$ref": "#/definitions/endpoints.PostOTPResponse"
+                      }
+                  }
+              }
+          }
+      },
+      "/auth/pin": {
+          "put": {
+              "security": [
+                  {
+                      "ScopeAuthorizer": []
+                  }
+              ],
+              "consumes": [
+                  "application/json"
+              ],
+              "produces": [
+                  "application/json"
+              ],
+              "tags": [
+                  "Authentication"
+              ],
+              "summary": "Update security digit PIN (required level p Token",
+              "parameters": [
+                  {
+                      "description": "Update digits PIN body",
+                      "name": "Input",
+                      "in": "body",
+                      "required": true,
+                      "schema": {
+                          "type": "object",
+                          "$ref": "#/definitions/endpoints.PutPINRequest"
+                      }
+                  }
+              ],
+              "responses": {
+                  "200": {
+                      "description": "OK",
+                      "schema": {
+                          "type": "object",
+                          "$ref": "#/definitions/endpoints.PutPINResponse"
+                      }
+                  }
+              }
+          },
+          "post": {
+              "security": [
+                  {
+                      "ScopeAuthorizer": []
+                  }
+              ],
+              "description": "User operation security PIN. User will be able to setup PIN with session Token **ONLY** the first time, means digits PIN not exists in authentication info \\n \u003eNOTE: After setup PIN, user will required level2+ Token to setup Digit PIN",
+              "consumes": [
+                  "application/json"
+              ],
+              "produces": [
+                  "application/json"
+              ],
+              "tags": [
+                  "Authentication"
+              ],
+              "summary": "Setup Digits PIN for the first time user logged in. THIS METHOD ONLY VALID FOR KYC ON-BOARDING ONLY",
+              "operationId": "setup-digits-PIN",
+              "parameters": [
+                  {
+                      "description": "Setup PIN in",
+                      "name": "Input",
+                      "in": "body",
+                      "required": true,
+                      "schema": {
+                          "type": "object",
+                          "$ref": "#/definitions/endpoints.PostPINRequest"
+                      }
+                  }
+              ],
+              "responses": {
+                  "200": {
+                      "description": "OK",
+                      "schema": {
+                          "type": "object",
+                          "$ref": "#/definitions/endpoints.PostPINResponse"
+                      }
+                  },
+                  "405": {
+                      "description": "Pin setup failed, PIN is exists",
+                      "schema": {
+                          "type": "object",
+                          "$ref": "#/definitions/endpoints.PostPINResponse"
+                      }
+                  }
+              }
+          }
+      },
+      "/auth/pin/_reset": {
+          "post": {
+              "consumes": [
+                  "application/json"
+              ],
+              "produces": [
+                  "application/json"
+              ],
+              "tags": [
+                  "Authentication"
+              ],
+              "summary": "reset security digit PIN",
+              "parameters": [
+                  {
+                      "description": "Reset digits PIN body",
+                      "name": "Input",
+                      "in": "body",
+                      "required": true,
+                      "schema": {
+                          "type": "object",
+                          "$ref": "#/definitions/endpoints.PostPINResetRequest"
+                      }
+                  },
+                  {
+                      "type": "string",
+                      "default": "kycCode",
+                      "description": "Type of credential to use to reset PIN (kycCode, otp)",
+                      "name": "grant_type",
+                      "in": "query",
+                      "required": true
+                  }
+              ],
+              "responses": {
+                  "200": {
+                      "description": "OK",
+                      "schema": {
+                          "type": "object",
+                          "$ref": "#/definitions/endpoints.PostPINResetResponse"
+                      }
+                  }
+              }
+          }
+      },
+      "/auth/token": {
+          "post": {
+              "description": "Create new session Token, if user does not exists in service database this method will fetch all profile data from KYC service and create new account for them and then generate Token represent the user.\nList of Grant type\n- refreshToken: use refresh Token to issue new access Token\n- level2p: Token use to commit transaction\n- otp: Issue Token by otp method\n- kycCode: Issue Token by KYCCode method\n- boardingKYCCode: Sign up from KYC Service Token\n- boardingOTP: Boarding by OTP challenge\n- lv1ToLv2: upgrade lv1 Token to lv2 Token, user must validate Mobile number before use this grant type",
+              "consumes": [
+                  "application/json"
+              ],
+              "produces": [
+                  "application/json"
+              ],
+              "tags": [
+                  "Authentication"
+              ],
+              "summary": "Request new session Token.",
+              "parameters": [
+                  {
+                      "type": "string",
+                      "description": "Grant type of request",
+                      "name": "grant_type",
+                      "in": "query"
+                  },
+                  {
+                      "description": "Body",
+                      "name": "Input",
+                      "in": "body",
+                      "required": true,
+                      "schema": {
+                          "type": "object",
+                          "$ref": "#/definitions/usecases.IssueTokenInput"
+                      }
+                  }
+              ],
+              "responses": {
+                  "201": {
+                      "description": "Created",
+                      "schema": {
+                          "type": "object",
+                          "$ref": "#/definitions/usecases.IssueTokenOutput"
+                      }
+                  }
+              }
+          }
+      },
+      "/notification/cancel": {
+          "post": {
+              "security": [
+                  {
+                      "ScopeAuthorizer": []
+                  }
+              ],
+              "consumes": [
+                  "application/json"
+              ],
+              "produces": [
+                  "application/json"
+              ],
+              "tags": [
+                  "Notification"
+              ],
+              "summary": "Cancel notification service that client enrolled",
+              "responses": {
+                  "200": {
+                      "description": "OK",
+                      "schema": {
+                          "type": "object",
+                          "$ref": "#/definitions/endpoints.PostCancelResponse"
+                      }
+                  }
+              }
+          }
+      },
+      "/notification/enroll": {
+          "post": {
+              "security": [
+                  {
+                      "ScopeAuthorizer": []
+                  }
+              ],
+              "consumes": [
+                  "application/json"
+              ],
+              "produces": [
+                  "application/json"
+              ],
+              "tags": [
+                  "Notification"
+              ],
+              "summary": "Register notification service",
+              "parameters": [
+                  {
+                      "description": "Body",
+                      "name": "input",
+                      "in": "body",
+                      "required": true,
+                      "schema": {
+                          "type": "object",
+                          "$ref": "#/definitions/endpoints.PostEnrollRequest"
+                      }
+                  }
+              ],
+              "responses": {
+                  "200": {
+                      "description": "OK",
+                      "schema": {
+                          "type": "object",
+                          "$ref": "#/definitions/endpoints.PostEnrollResponse"
+                      }
+                  }
+              }
+          }
+      },
+      "/notification/history/me/_list": {
+          "get": {
+              "security": [
+                  {
+                      "ScopeAuthorizer": []
+                  }
+              ],
+              "consumes": [
+                  "application/json"
+              ],
+              "produces": [
+                  "application/json"
+              ],
+              "tags": [
+                  "Notification"
+              ],
+              "summary": "List all my notification histories [user]",
+              "parameters": [
+                  {
+                      "type": "number",
+                      "description": "Pagination item limit default = 10",
+                      "name": "limit",
+                      "in": "query"
+                  },
+                  {
+                      "type": "number",
+                      "description": "Pagination item to skip default = 0",
+                      "name": "offset",
+                      "in": "query"
+                  }
+              ],
+              "responses": {
+                  "200": {
+                      "description": "OK",
+                      "schema": {
+                          "type": "object",
+                          "$ref": "#/definitions/endpoints.GetHistoryListResponse"
+                      }
+                  }
+              }
+          }
+      },
+      "/notification/history/topic/{topic_name}/_list": {
+          "get": {
+              "consumes": [
+                  "application/json"
+              ],
+              "produces": [
+                  "application/json"
+              ],
+              "tags": [
+                  "Notification"
+              ],
+              "summary": "List all notification histories of specific topic",
+              "parameters": [
+                  {
+                      "type": "string",
+                      "description": "topic name",
+                      "name": "topic_name",
+                      "in": "path",
+                      "required": true
+                  },
+                  {
+                      "type": "number",
+                      "description": "Pagination item limit default = 10",
+                      "name": "limit",
+                      "in": "query"
+                  },
+                  {
+                      "type": "number",
+                      "description": "Pagination item to skip default = 0",
+                      "name": "offset",
+                      "in": "query"
+                  }
+              ],
+              "responses": {
+                  "200": {
+                      "description": "OK",
+                      "schema": {
+                          "type": "object",
+                          "$ref": "#/definitions/endpoints.GetHistoryListResponse"
+                      }
+                  }
+              }
+          }
+      },
+      "/notification/subscribe": {
+          "post": {
+              "consumes": [
+                  "application/json"
+              ],
+              "produces": [
+                  "application/json"
+              ],
+              "tags": [
+                  "Notification"
+              ],
+              "summary": "Subscribe client device to specific topic",
+              "parameters": [
+                  {
+                      "description": "Body",
+                      "name": "input",
+                      "in": "body",
+                      "required": true,
+                      "schema": {
+                          "type": "object",
+                          "$ref": "#/definitions/endpoints.PostSubscribeRequest"
+                      }
+                  }
+              ],
+              "responses": {
+                  "200": {
+                      "description": "OK",
+                      "schema": {
+                          "type": "object",
+                          "$ref": "#/definitions/endpoints.PostSubscribeResponse"
+                      }
+                  }
+              }
+          }
+      },
+      "/notification/topic/_list": {
+          "get": {
+              "consumes": [
+                  "application/json"
+              ],
+              "produces": [
+                  "application/json"
+              ],
+              "tags": [
+                  "Notification"
+              ],
+              "summary": "List all topics for subscribing",
+              "parameters": [
+                  {
+                      "type": "number",
+                      "description": "Pagination item limit default = 10",
+                      "name": "limit",
+                      "in": "query"
+                  },
+                  {
+                      "type": "number",
+                      "description": "Pagination item to skip default = 0",
+                      "name": "offset",
+                      "in": "query"
+                  }
+              ],
+              "responses": {
+                  "200": {
+                      "description": "OK",
+                      "schema": {
+                          "type": "object",
+                          "$ref": "#/definitions/endpoints.GetTopicResponse"
+                      }
+                  }
+              }
+          }
+      },
+      "/notification/unsubscribe": {
+          "post": {
+              "consumes": [
+                  "application/json"
+              ],
+              "produces": [
+                  "application/json"
+              ],
+              "tags": [
+                  "Notification"
+              ],
+              "summary": "Subscribe client device to specific topic",
+              "parameters": [
+                  {
+                      "description": "Body",
+                      "name": "input",
+                      "in": "body",
+                      "required": true,
+                      "schema": {
+                          "type": "object",
+                          "$ref": "#/definitions/endpoints.PostUnsubscribeRequest"
+                      }
+                  }
+              ],
+              "responses": {
+                  "200": {
+                      "description": "OK",
+                      "schema": {
+                          "type": "object",
+                          "$ref": "#/definitions/endpoints.PostUnsubscribeResponse"
+                      }
+                  }
+              }
+          }
+      },
+      "/static/language": {
+          "get": {
+              "description": "This API return i18n definition\nClient can define which language to receive\nby provide language tag on \"Accept-Language\" header",
+              "produces": [
+                  "application/json"
+              ],
+              "tags": [
+                  "Static"
+              ],
+              "summary": "Get language resource for localization",
+              "parameters": [
+                  {
+                      "type": "string",
+                      "default": "en-us",
+                      "description": "Language of this request",
+                      "name": "accept-language",
+                      "in": "header"
+                  }
+              ],
+              "responses": {
+                  "200": {
+                      "description": "OK",
+                      "schema": {
+                          "type": "object",
+                          "$ref": "#/definitions/static.GetLanguageResponse"
+                      }
+                  }
+              }
+          }
+      },
+      "/static/language/_list": {
+          "get": {
+              "description": "List of supported language for API\nClient can use on of this language\nin \"Accept-Language\" in Request header",
+              "produces": [
+                  "application/json"
+              ],
+              "tags": [
+                  "Static"
+              ],
+              "summary": "Get list of supported language",
+              "responses": {
+                  "200": {
+                      "description": "OK",
+                      "schema": {
+                          "type": "object",
+                          "$ref": "#/definitions/transports.GetLanguageListResponse"
+                      }
+                  }
+              }
+          }
+      },
+      "/static/terms-agreement": {
+          "get": {
+              "produces": [
+                  "application/json"
+              ],
+              "tags": [
+                  "Static"
+              ],
+              "summary": "Get latest Terms and Agreement.",
+              "parameters": [
+                  {
+                      "type": "string",
+                      "default": "en-us",
+                      "description": "Language of this request",
+                      "name": "accept-language",
+                      "in": "header"
+                  }
+              ],
+              "responses": {
+                  "200": {
+                      "description": "OK",
+                      "schema": {
+                          "type": "object",
+                          "$ref": "#/definitions/static.GetTermsAndAgreementResponse"
+                      }
+                  }
+              }
+          }
+      },
+      "/tx/fx-rate/_all": {
+          "get": {
+              "produces": [
+                  "application/json"
+              ],
+              "tags": [
+                  "Transaction"
+              ],
+              "summary": "Get fx rate of all mtos",
+              "responses": {
+                  "200": {
+                      "description": "OK",
+                      "schema": {
+                          "type": "object",
+                          "$ref": "#/definitions/rest.GetExchangeRatesResponse"
+                      }
+                  }
+              }
+          }
+      },
+      "/tx/mto/_list": {
+          "get": {
+              "description": "Get MTO list to use as target to send fund",
+              "produces": [
+                  "application/json"
+              ],
+              "tags": [
+                  "Transaction"
+              ],
+              "summary": "Get MTO list",
+              "parameters": [
+                  {
+                      "type": "number",
+                      "description": "Pagination item limit default = 10",
+                      "name": "limit",
+                      "in": "query"
+                  },
+                  {
+                      "type": "number",
+                      "description": "Pagination item to skip default = 0",
+                      "name": "offset",
+                      "in": "query"
+                  }
+              ],
+              "responses": {
+                  "200": {
+                      "description": "OK",
+                      "schema": {
+                          "type": "object",
+                          "$ref": "#/definitions/rest.GetMTOListResponse"
+                      }
+                  }
+              }
+          }
+      },
+      "/tx/payment/channel/_list": {
+          "get": {
+              "security": [
+                  {
+                      "ScopeAuthorizer": []
+                  }
+              ],
+              "description": "Get payment channel to use as cash-in targets",
+              "produces": [
+                  "application/json"
+              ],
+              "tags": [
+                  "Transaction"
+              ],
+              "summary": "Get payment channel list",
+              "parameters": [
+                  {
+                      "type": "number",
+                      "description": "Pagination item limit default = 10",
+                      "name": "limit",
+                      "in": "query"
+                  },
+                  {
+                      "type": "number",
+                      "description": "Pagination item to skip default = 0",
+                      "name": "offset",
+                      "in": "query"
+                  }
+              ],
+              "responses": {
+                  "200": {
+                      "description": "OK",
+                      "schema": {
+                          "type": "object",
+                          "$ref": "#/definitions/rest.GetPaymentChannelListResponse"
+                      }
+                  }
+              }
+          }
+      },
+      "/tx/payment/webhooks/lightnet_counterservice": {
+          "post": {
+              "description": "Webhook for lightnet payment service",
+              "produces": [
+                  "application/json"
+              ],
+              "tags": [
+                  "Transaction"
+              ],
+              "summary": "Webhook for lightnet payment service",
+              "parameters": [
+                  {
+                      "description": "Body",
+                      "name": "Input",
+                      "in": "body",
+                      "required": true,
+                      "schema": {
+                          "type": "object",
+                          "$ref": "#/definitions/rest.PostPaymentWebHookLNCSRequest"
+                      }
+                  }
+              ],
+              "responses": {
+                  "200": {
+                      "description": "OK",
+                      "schema": {
+                          "type": "object",
+                          "$ref": "#/definitions/rest.PostPaymentWebHookLNCSResponse"
+                      }
+                  }
+              }
+          }
+      },
+      "/tx/payment/webhooks/softnet_counterservice": {
+          "post": {
+              "description": "Webhook for softnet payment service",
+              "produces": [
+                  "application/json"
+              ],
+              "tags": [
+                  "Transaction"
+              ],
+              "summary": "Webhook for softnet payment service",
+              "parameters": [
+                  {
+                      "description": "Body",
+                      "name": "Input",
+                      "in": "body",
+                      "required": true,
+                      "schema": {
+                          "type": "object",
+                          "$ref": "#/definitions/rest.PostPaymentWebHookSNCSRequest"
+                      }
+                  }
+              ],
+              "responses": {
+                  "200": {
+                      "description": "OK",
+                      "schema": {
+                          "type": "object",
+                          "$ref": "#/definitions/rest.PostPaymentWebHookSNCSResponse"
+                      }
+                  }
+              }
+          }
+      },
+      "/tx/remittance/channel/_list": {
+          "get": {
+              "security": [
+                  {
+                      "ScopeAuthorizer": []
+                  }
+              ],
+              "description": "Get remittance channel to use as destination mto",
+              "produces": [
+                  "application/json"
+              ],
+              "tags": [
+                  "Transaction"
+              ],
+              "summary": "Get remittance channel list",
+              "parameters": [
+                  {
+                      "type": "number",
+                      "description": "Pagination item limit default = 10",
+                      "name": "limit",
+                      "in": "query"
+                  },
+                  {
+                      "type": "number",
+                      "description": "Pagination item to skip default = 0",
+                      "name": "offset",
+                      "in": "query"
+                  }
+              ],
+              "responses": {
+                  "200": {
+                      "description": "OK",
+                      "schema": {
+                          "type": "object",
+                          "$ref": "#/definitions/rest.GetPaymentChannelListResponse"
+                      }
+                  }
+              }
+          }
+      },
+      "/tx/remittance/transaction": {
+          "post": {
+              "security": [
+                  {
+                      "ScopeAuthorizer": []
+                  }
+              ],
+              "description": "Initiate a new remittance transaction",
+              "consumes": [
+                  "application/json"
+              ],
+              "produces": [
+                  "application/json"
+              ],
+              "tags": [
+                  "Transaction"
+              ],
+              "summary": "Initiate a new transaction",
+              "parameters": [
+                  {
+                      "description": "Body",
+                      "name": "Input",
+                      "in": "body",
+                      "required": true,
+                      "schema": {
+                          "type": "object",
+                          "$ref": "#/definitions/rest.PostRemittanceTransactionRequest"
+                      }
+                  }
+              ],
+              "responses": {
+                  "201": {
+                      "description": "Created",
+                      "schema": {
+                          "type": "object",
+                          "$ref": "#/definitions/rest.PostRemittanceTransactionResponse"
+                      }
+                  }
+              }
+          }
+      },
+      "/tx/remittance/transaction/_list": {
+          "get": {
+              "security": [
+                  {
+                      "ScopeAuthorizer": []
+                  }
+              ],
+              "description": "Get list of transactions",
+              "produces": [
+                  "application/json"
+              ],
+              "tags": [
+                  "Transaction"
+              ],
+              "summary": "List transactions",
+              "parameters": [
+                  {
+                      "type": "number",
+                      "description": "Pagination item limit default = 10",
+                      "name": "limit",
+                      "in": "query"
+                  },
+                  {
+                      "type": "number",
+                      "description": "Pagination item to skip default = 0",
+                      "name": "offset",
+                      "in": "query"
+                  }
+              ],
+              "responses": {
+                  "200": {
+                      "description": "OK",
+                      "schema": {
+                          "type": "object",
+                          "$ref": "#/definitions/rest.GetRemittanceTransactionListResponse"
+                      }
+                  }
+              }
+          }
+      },
+      "/tx/remittance/transaction/{transaction_id}": {
+          "get": {
+              "security": [
+                  {
+                      "ScopeAuthorizer": []
+                  }
+              ],
+              "description": "Get details of a transaction",
+              "produces": [
+                  "application/json"
+              ],
+              "tags": [
+                  "Transaction"
+              ],
+              "summary": "Get transaction detail",
+              "parameters": [
+                  {
+                      "type": "string",
+                      "description": "ID of transaction to be returned",
+                      "name": "transaction_id",
+                      "in": "path",
+                      "required": true
+                  }
+              ],
+              "responses": {
+                  "200": {
+                      "description": "OK",
+                      "schema": {
+                          "type": "object",
+                          "$ref": "#/definitions/rest.GetRemittanceTransactionResponse"
+                      }
+                  }
+              }
+          },
+          "put": {
+              "security": [
+                  {
+                      "ScopeAuthorizer": []
+                  }
+              ],
+              "description": "Confirm/cancel an initiated transaction",
+              "consumes": [
+                  "application/json"
+              ],
+              "produces": [
+                  "application/json"
+              ],
+              "tags": [
+                  "Transaction"
+              ],
+              "summary": "Confirm/cancel a transaction",
+              "parameters": [
+                  {
+                      "description": "Body",
+                      "name": "Input",
+                      "in": "body",
+                      "required": true,
+                      "schema": {
+                          "type": "object",
+                          "$ref": "#/definitions/rest.PutRemittanceTransactionRequest"
+                      }
+                  },
+                  {
+                      "type": "string",
+                      "description": "ID of transaction to be altered",
+                      "name": "transaction_id",
+                      "in": "path",
+                      "required": true
+                  }
+              ],
+              "responses": {
+                  "200": {
+                      "description": "OK",
+                      "schema": {
+                          "type": "object",
+                          "$ref": "#/definitions/rest.PutRemittanceTransactionResponse"
+                      }
+                  }
+              }
+          }
+      },
+      "/tx/remittance/transaction/{transaction_id}/history": {
+          "get": {
+              "security": [
+                  {
+                      "ScopeAuthorizer": []
+                  }
+              ],
+              "description": "Get histories of a transaction",
+              "produces": [
+                  "application/json"
+              ],
+              "tags": [
+                  "Transaction"
+              ],
+              "summary": "Get transaction histories",
+              "parameters": [
+                  {
+                      "type": "string",
+                      "description": "ID of transaction to be returned",
+                      "name": "transaction_id",
+                      "in": "path",
+                      "required": true
+                  }
+              ],
+              "responses": {
+                  "200": {
+                      "description": "OK",
+                      "schema": {
+                          "type": "object",
+                          "$ref": "#/definitions/rest.GetRemittanceTransactionHistoryResponse"
+                      }
+                  }
+              }
+          }
+      },
+      "/tx/remittance/webhooks/lightnet_remittanceservice": {
+          "post": {
+              "description": "Webhook for lightnet remittance service",
+              "produces": [
+                  "application/json"
+              ],
+              "tags": [
+                  "Transaction"
+              ],
+              "summary": "Webhook for lightnet remittance service",
+              "parameters": [
+                  {
+                      "description": "Body",
+                      "name": "Input",
+                      "in": "body",
+                      "required": true,
+                      "schema": {
+                          "type": "object",
+                          "$ref": "#/definitions/rest.PostRemittanceWebHookLNRSRequest"
+                      }
+                  }
+              ],
+              "responses": {
+                  "200": {
+                      "description": "OK",
+                      "schema": {
+                          "type": "object",
+                          "$ref": "#/definitions/rest.PostRemittanceWebHookLNRSResponse"
+                      }
+                  }
+              }
+          }
+      },
+      "/tx/topup/wallet": {
+          "post": {
+              "security": [
+                  {
+                      "ScopeAuthorizer": []
+                  }
+              ],
+              "description": "Top up to wallet",
+              "consumes": [
+                  "application/json"
+              ],
+              "produces": [
+                  "application/json"
+              ],
+              "tags": [
+                  "Transaction"
+              ],
+              "summary": "Wallet top up",
+              "parameters": [
+                  {
+                      "description": "Body",
+                      "name": "Input",
+                      "in": "body",
+                      "required": true,
+                      "schema": {
+                          "type": "object",
+                          "$ref": "#/definitions/rest.PostTopUpWalletRequest"
+                      }
+                  }
+              ],
+              "responses": {
+                  "201": {
+                      "description": "Created",
+                      "schema": {
+                          "type": "object",
+                          "$ref": "#/definitions/rest.PostTopUpWalletResponse"
+                      }
+                  }
+              }
+          }
+      },
+      "/tx/topup/wallet/_list": {
+          "get": {
+              "security": [
+                  {
+                      "ScopeAuthorizer": []
+                  }
+              ],
+              "description": "Get list of wallet top up",
+              "consumes": [
+                  "application/json"
+              ],
+              "produces": [
+                  "application/json"
+              ],
+              "tags": [
+                  "Transaction"
+              ],
+              "summary": "List wallet top up",
+              "responses": {
+                  "200": {
+                      "description": "OK",
+                      "schema": {
+                          "type": "object",
+                          "$ref": "#/definitions/rest.GetTopUpWalletListResponse"
+                      }
+                  }
+              }
+          }
+      },
+      "/tx/topup/wallet/{transaction_id}": {
+          "get": {
+              "security": [
+                  {
+                      "ScopeAuthorizer": []
+                  }
+              ],
+              "description": "Get wallet top up detail",
+              "consumes": [
+                  "application/json"
+              ],
+              "produces": [
+                  "application/json"
+              ],
+              "tags": [
+                  "Transaction"
+              ],
+              "summary": "Wallet top up detail",
+              "parameters": [
+                  {
+                      "type": "string",
+                      "description": "ID of top up transaction",
+                      "name": "transaction_id",
+                      "in": "path",
+                      "required": true
+                  }
+              ],
+              "responses": {
+                  "200": {
+                      "description": "OK",
+                      "schema": {
+                          "type": "object",
+                          "$ref": "#/definitions/rest.GetTopUpWalletResponse"
+                      }
+                  }
+              }
+          },
+          "put": {
+              "security": [
+                  {
+                      "ScopeAuthorizer": []
+                  }
+              ],
+              "description": "Confirm/cancel an initiated transaction",
+              "consumes": [
+                  "application/json"
+              ],
+              "produces": [
+                  "application/json"
+              ],
+              "tags": [
+                  "Transaction"
+              ],
+              "summary": "Confirm/cancel top up",
+              "parameters": [
+                  {
+                      "type": "string",
+                      "description": "ID of top up transaction",
+                      "name": "transaction_id",
+                      "in": "path",
+                      "required": true
+                  },
+                  {
+                      "description": "Body",
+                      "name": "Input",
+                      "in": "body",
+                      "required": true,
+                      "schema": {
+                          "type": "object",
+                          "$ref": "#/definitions/rest.PutTopUpWalletRequest"
+                      }
+                  }
+              ],
+              "responses": {
+                  "200": {
+                      "description": "OK",
+                      "schema": {
+                          "type": "object",
+                          "$ref": "#/definitions/rest.PutTopUpWalletResponse"
+                      }
+                  }
+              }
+          }
+      },
+      "/tx/topup/wallet/{transaction_id}/history": {
+          "get": {
+              "security": [
+                  {
+                      "ScopeAuthorizer": []
+                  }
+              ],
+              "description": "Get wallet top up detail",
+              "consumes": [
+                  "application/json"
+              ],
+              "produces": [
+                  "application/json"
+              ],
+              "tags": [
+                  "Transaction"
+              ],
+              "summary": "Wallet top up detail",
+              "parameters": [
+                  {
+                      "type": "string",
+                      "description": "ID of top up transaction",
+                      "name": "transaction_id",
+                      "in": "path",
+                      "required": true
+                  }
+              ],
+              "responses": {
+                  "200": {
+                      "description": "OK",
+                      "schema": {
+                          "type": "object",
+                          "$ref": "#/definitions/rest.GetTopUpWalletHistoryResponse"
+                      }
+                  }
+              }
+          }
+      },
+      "/user/{user_id}/profile": {
+          "get": {
+              "security": [
+                  {
+                      "ScopeAuthorizer": []
+                  }
+              ],
+              "description": "DefaultUserProfileRepository Profile data according to access token from Request Headers or Parameters",
+              "produces": [
+                  "application/json"
+              ],
+              "tags": [
+                  "User"
+              ],
+              "summary": "Get user profile data",
+              "parameters": [
+                  {
+                      "type": "string",
+                      "default": "me",
+                      "description": "ID of user to get Image, me refer to session user_id",
+                      "name": "user_id",
+                      "in": "path",
+                      "required": true
+                  }
+              ],
+              "responses": {
+                  "200": {
+                      "description": "OK",
+                      "schema": {
+                          "type": "object",
+                          "$ref": "#/definitions/user.GetUserProfileResponse"
+                      }
+                  }
+              }
+          },
+          "put": {
+              "security": [
+                  {
+                      "ScopeAuthorizer": []
+                  }
+              ],
+              "description": "Allow update to update profile",
+              "produces": [
+                  "application/json"
+              ],
+              "tags": [
+                  "User"
+              ],
+              "summary": "Update user profile data",
+              "parameters": [
+                  {
+                      "description": "Body",
+                      "name": "in",
+                      "in": "body",
+                      "required": true,
+                      "schema": {
+                          "type": "object",
+                          "$ref": "#/definitions/user.UpdateUserProfileRequest"
+                      }
+                  },
+                  {
+                      "type": "string",
+                      "default": "me",
+                      "description": "ID of user to get Image, me refer to session user_id",
+                      "name": "user_id",
+                      "in": "path",
+                      "required": true
+                  }
+              ],
+              "responses": {
+                  "200": {
+                      "description": "OK",
+                      "schema": {
+                          "type": "object",
+                          "$ref": "#/definitions/user.GetUserProfileResponse"
+                      }
+                  }
+              }
+          }
+      },
+      "/user/{user_id}/profile-picture": {
+          "get": {
+              "description": "Request must define header.Accept to image/jpeg (to bypass binary convert from APIGateway)\nUse this API to get profile-picture",
+              "produces": [
+                  "image/jpeg"
+              ],
+              "tags": [
+                  "User"
+              ],
+              "summary": "get profile picture",
+              "parameters": [
+                  {
+                      "type": "string",
+                      "default": "me",
+                      "description": "ID of user to get Image, me refer to session user_id",
+                      "name": "user_id",
+                      "in": "path",
+                      "required": true
+                  }
+              ]
+          },
+          "put": {
+              "security": [
+                  {
+                      "ScopeAuthorizer": []
+                  }
+              ],
+              "description": "Use this API to upload profile picture, API require form-data",
+              "consumes": [
+                  "multipart/form-data"
+              ],
+              "produces": [
+                  "application/json"
+              ],
+              "tags": [
+                  "User"
+              ],
+              "summary": "update profile picture directly to service (deprecated)",
+              "parameters": [
+                  {
+                      "type": "string",
+                      "default": "me",
+                      "description": "ID of user to get Image, me refer to session user_id",
+                      "name": "user_id",
+                      "in": "path",
+                      "required": true
+                  },
+                  {
+                      "type": "file",
+                      "description": "Base64 image file, This method ",
+                      "name": "image",
+                      "in": "formData",
+                      "required": true
+                  }
+              ],
+              "responses": {
+                  "200": {
+                      "description": "OK",
+                      "schema": {
+                          "type": "object",
+                          "$ref": "#/definitions/user.UpdateUserProfilePictureResponse"
+                      }
+                  }
+              }
+          }
+      },
+      "/user/{user_id}/profile-picture/upload-url": {
+          "get": {
+              "security": [
+                  {
+                      "ScopeAuthorizer": []
+                  }
+              ],
+              "description": "Use this API to upload profile picture,",
+              "produces": [
+                  "application/json"
+              ],
+              "tags": [
+                  "User"
+              ],
+              "summary": "get profile picture upload url from pre sign s3 url, link expire in 10 minute.",
+              "parameters": [
+                  {
+                      "type": "string",
+                      "default": "me",
+                      "description": "ID of user to get Image, me refer to session user_id",
+                      "name": "user_id",
+                      "in": "path",
+                      "required": true
+                  },
+                  {
+                      "type": "number",
+                      "description": "size of image to upload in byte, maximum is 2000000",
+                      "name": "size",
+                      "in": "query"
+                  }
+              ],
+              "responses": {
+                  "200": {
+                      "description": "OK",
+                      "schema": {
+                          "type": "object",
+                          "$ref": "#/definitions/user.GetUpdateUserProfilePictureResponse"
+                      }
+                  }
+              }
+          }
+      },
+      "/user/{user_id}/profile/attachment/_list": {
+          "get": {
+              "security": [
+                  {
+                      "ScopeAuthorizer": []
+                  }
+              ],
+              "produces": [
+                  "application/json"
+              ],
+              "tags": [
+                  "User"
+              ],
+              "parameters": [
+                  {
+                      "type": "string",
+                      "default": "me",
+                      "description": "ID of user to get Image, me refer to session user_id",
+                      "name": "user_id",
+                      "in": "path",
+                      "required": true
+                  }
+              ],
+              "responses": {
+                  "200": {
+                      "description": "OK",
+                      "schema": {
+                          "type": "object",
+                          "$ref": "#/definitions/delivery.GetAttachmentListResponse"
+                      }
+                  }
+              }
+          }
+      },
+      "/user/{user_id}/profile/mobile-number": {
+          "put": {
+              "security": [
+                  {
+                      "ScopeAuthorizer": []
+                  }
+              ],
+              "description": "Verify OTP code and update user mobile number and update",
+              "produces": [
+                  "application/json"
+              ],
+              "tags": [
+                  "User"
+              ],
+              "summary": "Update user mobile number",
+              "parameters": [
+                  {
+                      "description": "ID of user to get Image, me refer to session user_id",
+                      "name": "Input",
+                      "in": "body",
+                      "required": true,
+                      "schema": {
+                          "type": "object",
+                          "$ref": "#/definitions/user.PutMobileNumberRequest"
+                      }
+                  },
+                  {
+                      "type": "string",
+                      "default": "me",
+                      "description": "ID of user to get Image, me refer to session user_id",
+                      "name": "user_id",
+                      "in": "path",
+                      "required": true
+                  }
+              ],
+              "responses": {
+                  "200": {
+                      "description": "OK",
+                      "schema": {
+                          "type": "object",
+                          "$ref": "#/definitions/user.GetFavouriteReceiverListResponse"
+                      }
+                  }
+              }
+          }
+      },
+      "/user/{user_id}/receiver": {
+          "post": {
+              "security": [
+                  {
+                      "ScopeAuthorizer": []
+                  }
+              ],
+              "produces": [
+                  "application/json"
+              ],
+              "tags": [
+                  "User"
+              ],
+              "summary": "create new favourite receiver record",
+              "parameters": [
+                  {
+                      "description": "Body",
+                      "name": "input",
+                      "in": "body",
+                      "required": true,
+                      "schema": {
+                          "type": "object",
+                          "$ref": "#/definitions/user.CreateUserFavouriteReceiverRequest"
+                      }
+                  },
+                  {
+                      "type": "string",
+                      "default": "me",
+                      "description": "ID of user to get Image, me refer to session user_id",
+                      "name": "user_id",
+                      "in": "path",
+                      "required": true
+                  }
+              ],
+              "responses": {
+                  "200": {
+                      "description": "OK",
+                      "schema": {
+                          "type": "object",
+                          "$ref": "#/definitions/user.CreateUserFavouriteReceiverResponse"
+                      }
+                  }
+              }
+          }
+      },
+      "/user/{user_id}/receiver/_batch": {
+          "put": {
+              "security": [
+                  {
+                      "ScopeAuthorizer": []
+                  }
+              ],
+              "produces": [
+                  "application/json"
+              ],
+              "tags": [
+                  "User"
+              ],
+              "summary": "Batch updating favourite receiver record (owner only)",
+              "parameters": [
+                  {
+                      "description": "Record of batch operations",
+                      "name": "Data",
+                      "in": "body",
+                      "required": true,
+                      "schema": {
+                          "type": "object",
+                          "$ref": "#/definitions/user.BatchUpdateFavouriteReceiversBody"
+                      }
+                  },
+                  {
+                      "type": "string",
+                      "default": "me",
+                      "description": "ID of user to get Image, me refer to session user_id",
+                      "name": "user_id",
+                      "in": "path",
+                      "required": true
+                  }
+              ],
+              "responses": {
+                  "200": {
+                      "description": "OK",
+                      "schema": {
+                          "type": "object",
+                          "$ref": "#/definitions/user.DeleteFavouriteReceiverResponse"
+                      }
+                  }
+              }
+          }
+      },
+      "/user/{user_id}/receiver/_list": {
+          "get": {
+              "security": [
+                  {
+                      "ScopeAuthorizer": []
+                  }
+              ],
+              "description": "Return list of favourite receiver of User",
+              "produces": [
+                  "application/json"
+              ],
+              "tags": [
+                  "User"
+              ],
+              "summary": "Get favourite receiver list",
+              "parameters": [
+                  {
+                      "type": "number",
+                      "description": "Pagination item limit default = 1t10",
+                      "name": "limit",
+                      "in": "query"
+                  },
+                  {
+                      "type": "number",
+                      "description": "Pagination item to skip default = 0",
+                      "name": "offset",
+                      "in": "query"
+                  },
+                  {
+                      "type": "string",
+                      "default": "me",
+                      "description": "ID of user to get Image, me refer to session user_id",
+                      "name": "user_id",
+                      "in": "path",
+                      "required": true
+                  }
+              ],
+              "responses": {
+                  "200": {
+                      "description": "OK",
+                      "schema": {
+                          "type": "object",
+                          "$ref": "#/definitions/user.GetFavouriteReceiverListResponse"
+                      }
+                  }
+              }
+          }
+      },
+      "/user/{user_id}/receiver/{receiver_id}": {
+          "get": {
+              "security": [
+                  {
+                      "ScopeAuthorizer": []
+                  }
+              ],
+              "produces": [
+                  "application/json"
+              ],
+              "tags": [
+                  "User"
+              ],
+              "summary": "get favourite receiver record (owner only)",
+              "parameters": [
+                  {
+                      "type": "string",
+                      "description": "receiver ID",
+                      "name": "receiver_id",
+                      "in": "path",
+                      "required": true
+                  },
+                  {
+                      "type": "string",
+                      "default": "me",
+                      "description": "ID of user to get Image, me refer to session user_id",
+                      "name": "user_id",
+                      "in": "path",
+                      "required": true
+                  }
+              ],
+              "responses": {
+                  "200": {
+                      "description": "OK",
+                      "schema": {
+                          "type": "object",
+                          "$ref": "#/definitions/user.GetUserFavouriteReceiverResponse"
+                      }
+                  }
+              }
+          },
+          "put": {
+              "security": [
+                  {
+                      "ScopeAuthorizer": []
+                  }
+              ],
+              "produces": [
+                  "application/json"
+              ],
+              "tags": [
+                  "User"
+              ],
+              "summary": "update favourite receiver record (owner only)",
+              "parameters": [
+                  {
+                      "type": "string",
+                      "description": "receiver ID",
+                      "name": "receiver_id",
+                      "in": "path",
+                      "required": true
+                  },
+                  {
+                      "type": "string",
+                      "default": "me",
+                      "description": "ID of user to perform action, me refer to session user_id",
+                      "name": "user_id",
+                      "in": "path",
+                      "required": true
+                  },
+                  {
+                      "description": "Favourite receiver data",
+                      "name": "input",
+                      "in": "body",
+                      "required": true,
+                      "schema": {
+                          "type": "object",
+                          "$ref": "#/definitions/user.UpdateUserFavouriteReceiverRequest"
+                      }
+                  }
+              ],
+              "responses": {
+                  "200": {
+                      "description": "OK",
+                      "schema": {
+                          "type": "object",
+                          "$ref": "#/definitions/user.UpdateUserFavouriteReceiverResponse"
+                      }
+                  }
+              }
+          },
+          "delete": {
+              "security": [
+                  {
+                      "ScopeAuthorizer": []
+                  }
+              ],
+              "produces": [
+                  "application/json"
+              ],
+              "tags": [
+                  "User"
+              ],
+              "summary": "delete favourite receiver record (owner only)",
+              "parameters": [
+                  {
+                      "type": "string",
+                      "description": "receiver ID",
+                      "name": "receiver_id",
+                      "in": "path",
+                      "required": true
+                  },
+                  {
+                      "type": "string",
+                      "default": "me",
+                      "description": "ID of user to get Image, me refer to session user_id",
+                      "name": "user_id",
+                      "in": "path",
+                      "required": true
+                  }
+              ],
+              "responses": {
+                  "200": {
+                      "description": "OK",
+                      "schema": {
+                          "type": "object",
+                          "$ref": "#/definitions/user.DeleteFavouriteReceiverResponse"
+                      }
+                  }
+              }
+          }
+      },
+      "/wallet/address": {
+          "get": {
+              "produces": [
+                  "application/json"
+              ],
+              "tags": [
+                  "Wallet"
+              ],
+              "summary": "Get address of user wallet",
+              "responses": {
+                  "200": {
+                      "description": "OK",
+                      "schema": {
+                          "type": "object",
+                          "$ref": "#/definitions/wallet.GetWalletAddressResponse"
+                      }
+                  }
+              }
+          }
+      },
+      "/wallet/balance": {
+          "get": {
+              "produces": [
+                  "application/json"
+              ],
+              "tags": [
+                  "Wallet"
+              ],
+              "summary": "Get balances of user wallet",
+              "responses": {
+                  "200": {
+                      "description": "OK",
+                      "schema": {
+                          "type": "object",
+                          "$ref": "#/definitions/wallet.GetWalletBalancesResponse"
+                      }
+                  }
+              }
+          }
+      }
+  },
+  "definitions": {
+      "delivery.GetAttachmentListResponse": {
+          "type": "object",
+          "properties": {
+              "debug": {
+                  "description": "on debugging mode, tracing useful information for development",
+                  "type": "object"
+              },
+              "detail": {
+                  "description": "return some deep detail about response",
+                  "type": "object"
+              },
+              "message": {
+                  "description": "return friendly message to client.",
+                  "type": "object"
+              },
+              "result": {
+                  "type": "array",
+                  "items": {
+                      "$ref": "#/definitions/entities.UserProfileDocument"
+                  }
+              }
+          }
+      },
+      "endpoints.GetHistoryListResponse": {
+          "type": "object",
+          "properties": {
+              "result": {
+                  "type": "object",
+                  "$ref": "#/definitions/endpoints.getHistoryListResponse_Result"
+              }
+          }
+      },
+      "endpoints.GetTopicResponse": {
+          "type": "object",
+          "properties": {
+              "arn": {
+                  "type": "string"
+              },
+              "name": {
+                  "type": "string"
+              }
+          }
+      },
+      "endpoints.PostCancelResponse": {
+          "type": "object",
+          "properties": {
+              "result": {
+                  "type": "string"
+              }
+          }
+      },
+      "endpoints.PostEnrollRequest": {
+          "type": "object",
+          "properties": {
+              "deviceToken": {
+                  "type": "string"
+              }
+          }
+      },
+      "endpoints.PostEnrollResponse": {
+          "type": "object",
+          "properties": {
+              "result": {
+                  "type": "string"
+              }
+          }
+      },
+      "endpoints.PostOTPRequest": {
+          "type": "object",
+          "properties": {
+              "mobileNumber": {
+                  "type": "string"
+              },
+              "userId": {
+                  "type": "string"
+              }
+          }
+      },
+      "endpoints.PostOTPResponse": {
+          "type": "object",
+          "properties": {
+              "result": {
+                  "type": "object",
+                  "$ref": "#/definitions/endpoints.PostOTPResponse_Result"
+              }
+          }
+      },
+      "endpoints.PostOTPResponse_Result": {
+          "type": "object",
+          "properties": {
+              "challenge": {
+                  "type": "string"
+              },
+              "expiresAt": {
+                  "type": "string"
+              }
+          }
+      },
+      "endpoints.PostPINRequest": {
+          "type": "object",
+          "properties": {
+              "value": {
+                  "type": "string"
+              }
+          }
+      },
+      "endpoints.PostPINResetRequest": {
+          "type": "object",
+          "properties": {
+              "kycCode": {
+                  "type": "string"
+              },
+              "mobileNumber": {
+                  "type": "string"
+              },
+              "otpAnswer": {
+                  "type": "string"
+              },
+              "otpChallenge": {
+                  "type": "string"
+              },
+              "userId": {
+                  "type": "string"
+              },
+              "value": {
+                  "type": "string"
+              }
+          }
+      },
+      "endpoints.PostPINResetResponse": {
+          "type": "object"
+      },
+      "endpoints.PostPINResponse": {
+          "type": "object",
+          "properties": {
+              "result": {
+                  "type": "string",
+                  "enum": [
+                      "PIN_SETUP_COMPLETED",
+                      " PIN_SETUP_FAILED"
+                  ]
+              }
+          }
+      },
+      "endpoints.PostSubscribeRequest": {
+          "type": "object",
+          "properties": {
+              "deviceToken": {
+                  "type": "string"
+              },
+              "topicName": {
+                  "type": "string"
+              }
+          }
+      },
+      "endpoints.PostSubscribeResponse": {
+          "type": "object",
+          "properties": {
+              "result": {
+                  "type": "string"
+              }
+          }
+      },
+      "endpoints.PostUnsubscribeRequest": {
+          "type": "object",
+          "properties": {
+              "deviceToken": {
+                  "type": "string"
+              },
+              "topicName": {
+                  "type": "string"
+              }
+          }
+      },
+      "endpoints.PostUnsubscribeResponse": {
+          "type": "object",
+          "properties": {
+              "result": {
+                  "type": "string"
+              }
+          }
+      },
+      "endpoints.PutPINRequest": {
+          "type": "object",
+          "properties": {
+              "value": {
+                  "type": "string"
+              }
+          }
+      },
+      "endpoints.PutPINResponse": {
+          "type": "object"
+      },
+      "endpoints.getHistoryListResponse_Result": {
+          "type": "object",
+          "properties": {
+              "count": {
+                  "type": "integer"
+              },
+              "limit": {
+                  "type": "integer"
+              },
+              "offset": {
+                  "type": "integer"
+              },
+              "records": {
+                  "type": "array",
+                  "items": {
+                      "$ref": "#/definitions/repositories.NotificationHistory"
+                  }
+              }
+          }
+      },
+      "entities.JwtToken": {
+          "type": "object",
+          "properties": {
+              "accessToken": {
+                  "type": "string"
+              },
+              "expiresIn": {
+                  "type": "integer"
+              },
+              "refreshToken": {
+                  "type": "string"
+              },
+              "refreshTokenExpiresIn": {
+                  "type": "integer"
+              },
+              "userID": {
+                  "type": "string"
+              }
+          }
+      },
+      "entities.Receiver": {
+          "type": "object",
+          "properties": {
+              "currency": {
+                  "type": "string"
+              },
+              "firstName": {
+                  "type": "string"
+              },
+              "id": {
+                  "type": "string"
+              },
+              "lastName": {
+                  "type": "string"
+              },
+              "memo": {
+                  "type": "string"
+              },
+              "middleName": {
+                  "type": "string"
+              },
+              "mobileNumber": {
+                  "type": "string"
+              },
+              "mtoId": {
+                  "type": "string"
+              },
+              "userId": {
+                  "type": "string"
+              },
+              "weight": {
+                  "type": "integer"
+              }
+          }
+      },
+      "entities.UserProfile": {
+          "type": "object",
+          "properties": {
+              "KYCId": {
+                  "type": "string"
+              },
+              "address": {
+                  "type": "string"
+              },
+              "dateOfBirth": {
+                  "type": "string"
+              },
+              "displayName": {
+                  "type": "string"
+              },
+              "firstName": {
+                  "type": "string"
+              },
+              "kycCode": {
+                  "type": "string"
+              },
+              "lastName": {
+                  "type": "string"
+              },
+              "middleName": {
+                  "type": "string"
+              },
+              "mobileNumber": {
+                  "type": "string"
+              },
+              "nationality": {
+                  "type": "string"
+              },
+              "passportExpiryDate": {
+                  "type": "string"
+              },
+              "passportId": {
+                  "type": "string"
+              },
+              "passportIssueDate": {
+                  "type": "string"
+              },
+              "userId": {
+                  "type": "string"
+              }
+          }
+      },
+      "entities.UserProfileDocument": {
+          "type": "object",
+          "properties": {
+              "createdAt": {
+                  "type": "string"
+              },
+              "type": {
+                  "type": "string"
+              },
+              "url": {
+                  "type": "string"
+              }
+          }
+      },
+      "models.Actor": {
+          "type": "object",
+          "properties": {
+              "address": {
+                  "type": "string"
+              },
+              "countryCode": {
+                  "type": "string"
+              },
+              "dateOfBirth": {
+                  "type": "string"
+              },
+              "displayName": {
+                  "type": "string"
+              },
+              "expiryDate": {
+                  "type": "string"
+              },
+              "firstName": {
+                  "type": "string"
+              },
+              "issueDate": {
+                  "type": "string"
+              },
+              "lastName": {
+                  "type": "string"
+              },
+              "middleName": {
+                  "type": "string"
+              },
+              "mobileNo": {
+                  "type": "string"
+              },
+              "number": {
+                  "type": "string"
+              }
+          }
+      },
+      "models.PaymentChannelInfo": {
+          "type": "object",
+          "properties": {
+              "country": {
+                  "type": "string"
+              },
+              "currencies": {
+                  "type": "array",
+                  "items": {
+                      "type": "string"
+                  }
+              },
+              "id": {
+                  "type": "string"
+              },
+              "name": {
+                  "type": "string"
+              }
+          }
+      },
+      "models.PaymentChannelInfos": {
+          "type": "array",
+          "items": {
+              "type": "object",
+              "properties": {
+                  "country": {
+                      "type": "string"
+                  },
+                  "currencies": {
+                      "type": "array",
+                      "items": {
+                          "type": "string"
+                      }
+                  },
+                  "id": {
+                      "type": "string"
+                  },
+                  "name": {
+                      "type": "string"
+                  }
+              }
+          }
+      },
+      "models.RemittanceChannel": {
+          "type": "object",
+          "properties": {
+              "country": {
+                  "type": "string"
+              },
+              "currencies": {
+                  "type": "array",
+                  "items": {
+                      "type": "string"
+                  }
+              },
+              "exchangeCurrency": {
+                  "type": "array",
+                  "items": {
+                      "type": "string"
+                  }
+              },
+              "id": {
+                  "type": "string"
+              },
+              "mtoId": {
+                  "type": "string"
+              },
+              "name": {
+                  "type": "string"
+              }
+          }
+      },
+      "models.RemittanceChannels": {
+          "type": "array",
+          "items": {
+              "type": "object",
+              "properties": {
+                  "country": {
+                      "type": "string"
+                  },
+                  "currencies": {
+                      "type": "array",
+                      "items": {
+                          "type": "string"
+                      }
+                  },
+                  "exchangeCurrency": {
+                      "type": "array",
+                      "items": {
+                          "type": "string"
+                      }
+                  },
+                  "id": {
+                      "type": "string"
+                  },
+                  "mtoId": {
+                      "type": "string"
+                  },
+                  "name": {
+                      "type": "string"
+                  }
+              }
+          }
+      },
+      "models.TopUp": {
+          "type": "object",
+          "properties": {
+              "amount": {
+                  "type": "number"
+              },
+              "cashInExpiryDate": {
+                  "type": "string"
+              },
+              "createdAt": {
+                  "type": "string"
+              },
+              "currency": {
+                  "type": "string"
+              },
+              "discount": {
+                  "type": "number"
+              },
+              "fee": {
+                  "type": "number"
+              },
+              "id": {
+                  "type": "string"
+              },
+              "paymentChannelId": {
+                  "type": "string"
+              },
+              "paymentCode": {
+                  "type": "string"
+              },
+              "paymentCodeFormat": {
+                  "type": "string"
+              },
+              "paymentId": {
+                  "type": "string"
+              },
+              "remark": {
+                  "type": "string"
+              },
+              "status": {
+                  "type": "string"
+              },
+              "topUpTx": {
+                  "type": "string"
+              },
+              "updatedAt": {
+                  "type": "string"
+              },
+              "updatedBy": {
+                  "type": "string"
+              },
+              "userId": {
+                  "type": "string"
+              },
+              "vat": {
+                  "type": "number"
+              },
+              "walletAddress": {
+                  "type": "string"
+              }
+          }
+      },
+      "models.TopUps": {
+          "type": "array",
+          "items": {
+              "type": "object",
+              "properties": {
+                  "amount": {
+                      "type": "number"
+                  },
+                  "cashInExpiryDate": {
+                      "type": "string"
+                  },
+                  "createdAt": {
+                      "type": "string"
+                  },
+                  "currency": {
+                      "type": "string"
+                  },
+                  "discount": {
+                      "type": "number"
+                  },
+                  "fee": {
+                      "type": "number"
+                  },
+                  "id": {
+                      "type": "string"
+                  },
+                  "paymentChannelId": {
+                      "type": "string"
+                  },
+                  "paymentCode": {
+                      "type": "string"
+                  },
+                  "paymentCodeFormat": {
+                      "type": "string"
+                  },
+                  "paymentId": {
+                      "type": "string"
+                  },
+                  "remark": {
+                      "type": "string"
+                  },
+                  "status": {
+                      "type": "string"
+                  },
+                  "topUpTx": {
+                      "type": "string"
+                  },
+                  "updatedAt": {
+                      "type": "string"
+                  },
+                  "updatedBy": {
+                      "type": "string"
+                  },
+                  "userId": {
+                      "type": "string"
+                  },
+                  "vat": {
+                      "type": "number"
+                  },
+                  "walletAddress": {
+                      "type": "string"
+                  }
+              }
+          }
+      },
+      "models.Transaction": {
+          "type": "object",
+          "properties": {
+              "amount": {
+                  "type": "number"
+              },
+              "cashInExpiryDate": {
+                  "type": "string"
+              },
+              "cashOutCode": {
+                  "type": "string"
+              },
+              "createdAt": {
+                  "type": "string"
+              },
+              "destinationCurrency": {
+                  "type": "string"
+              },
+              "discount": {
+                  "type": "number"
+              },
+              "exchangeCurrency": {
+                  "type": "string"
+              },
+              "exchangeRate1": {
+                  "type": "number"
+              },
+              "exchangeRate2": {
+                  "type": "number"
+              },
+              "fee": {
+                  "type": "number"
+              },
+              "id": {
+                  "type": "string"
+              },
+              "orderId": {
+                  "type": "string"
+              },
+              "paymentChannelId": {
+                  "type": "string"
+              },
+              "paymentCode": {
+                  "type": "string"
+              },
+              "paymentCodeFormat": {
+                  "type": "string"
+              },
+              "paymentId": {
+                  "type": "string"
+              },
+              "receiver": {
+                  "type": "object",
+                  "$ref": "#/definitions/models.Actor"
+              },
+              "receiverId": {
+                  "type": "string"
+              },
+              "remark": {
+                  "type": "string"
+              },
+              "remittanceChannelId": {
+                  "type": "string"
+              },
+              "remittanceId": {
+                  "type": "string"
+              },
+              "sender": {
+                  "type": "object",
+                  "$ref": "#/definitions/models.Actor"
+              },
+              "senderId": {
+                  "type": "string"
+              },
+              "sourceCurrency": {
+                  "type": "string"
+              },
+              "status": {
+                  "type": "string"
+              },
+              "updatedAt": {
+                  "type": "string"
+              },
+              "updatedBy": {
+                  "type": "string"
+              },
+              "vat": {
+                  "type": "number"
+              }
+          }
+      },
+      "models.Transactions": {
+          "type": "array",
+          "items": {
+              "type": "object",
+              "properties": {
+                  "amount": {
+                      "type": "number"
+                  },
+                  "cashInExpiryDate": {
+                      "type": "string"
+                  },
+                  "cashOutCode": {
+                      "type": "string"
+                  },
+                  "createdAt": {
+                      "type": "string"
+                  },
+                  "destinationCurrency": {
+                      "type": "string"
+                  },
+                  "discount": {
+                      "type": "number"
+                  },
+                  "exchangeCurrency": {
+                      "type": "string"
+                  },
+                  "exchangeRate1": {
+                      "type": "number"
+                  },
+                  "exchangeRate2": {
+                      "type": "number"
+                  },
+                  "fee": {
+                      "type": "number"
+                  },
+                  "id": {
+                      "type": "string"
+                  },
+                  "orderId": {
+                      "type": "string"
+                  },
+                  "paymentChannelId": {
+                      "type": "string"
+                  },
+                  "paymentCode": {
+                      "type": "string"
+                  },
+                  "paymentCodeFormat": {
+                      "type": "string"
+                  },
+                  "paymentId": {
+                      "type": "string"
+                  },
+                  "receiver": {
+                      "type": "object",
+                      "$ref": "#/definitions/models.Actor"
+                  },
+                  "receiverId": {
+                      "type": "string"
+                  },
+                  "remark": {
+                      "type": "string"
+                  },
+                  "remittanceChannelId": {
+                      "type": "string"
+                  },
+                  "remittanceId": {
+                      "type": "string"
+                  },
+                  "sender": {
+                      "type": "object",
+                      "$ref": "#/definitions/models.Actor"
+                  },
+                  "senderId": {
+                      "type": "string"
+                  },
+                  "sourceCurrency": {
+                      "type": "string"
+                  },
+                  "status": {
+                      "type": "string"
+                  },
+                  "updatedAt": {
+                      "type": "string"
+                  },
+                  "updatedBy": {
+                      "type": "string"
+                  },
+                  "vat": {
+                      "type": "number"
+                  }
+              }
+          }
+      },
+      "repositories.NotificationHistory": {
+          "type": "object",
+          "properties": {
+              "action": {
+                  "type": "object",
+                  "$ref": "#/definitions/util.NullString"
+              },
+              "createdAt": {
+                  "type": "string"
+              },
+              "data": {
+                  "type": "object",
+                  "$ref": "#/definitions/util.NullString"
+              },
+              "deletedAt": {
+                  "type": "string"
+              },
+              "destinationId": {
+                  "type": "object",
+                  "$ref": "#/definitions/util.NotNullString"
+              },
+              "id": {
+                  "type": "object",
+                  "$ref": "#/definitions/util.NotNullString"
+              },
+              "message": {
+                  "type": "object",
+                  "$ref": "#/definitions/util.NullString"
+              },
+              "type": {
+                  "type": "object",
+                  "$ref": "#/definitions/util.NotNullString"
+              },
+              "updatedAt": {
+                  "type": "string"
+              }
+          }
+      },
+      "rest.GetExchangeRatesResponse": {
+          "type": "object",
+          "properties": {
+              "debug": {
+                  "description": "on debugging mode, tracing useful information for development",
+                  "type": "object"
+              },
+              "detail": {
+                  "description": "return some deep detail about response",
+                  "type": "object"
+              },
+              "message": {
+                  "description": "return friendly message to client.",
+                  "type": "object"
+              },
+              "result": {
+                  "type": "array",
+                  "items": {
+                      "$ref": "#/definitions/rest.GetExchangeRatesResponse_Result"
+                  }
+              }
+          }
+      },
+      "rest.GetExchangeRatesResponse_ExchangePair_Result": {
+          "type": "object",
+          "properties": {
+              "fromCurrency": {
+                  "type": "string"
+              },
+              "toCurrency": {
+                  "type": "string"
+              },
+              "updatedAt": {
+                  "type": "string"
+              },
+              "value": {
+                  "type": "number"
+              }
+          }
+      },
+      "rest.GetExchangeRatesResponse_Result": {
+          "type": "object",
+          "properties": {
+              "ExchangePairs": {
+                  "type": "array",
+                  "items": {
+                      "$ref": "#/definitions/rest.GetExchangeRatesResponse_ExchangePair_Result"
+                  }
+              },
+              "mto_id": {
+                  "type": "string"
+              }
+          }
+      },
+      "rest.GetMTOListResponse": {
+          "type": "object",
+          "properties": {
+              "debug": {
+                  "description": "on debugging mode, tracing useful information for development",
+                  "type": "object"
+              },
+              "detail": {
+                  "description": "return some deep detail about response",
+                  "type": "object"
+              },
+              "message": {
+                  "description": "return friendly message to client.",
+                  "type": "object"
+              },
+              "result": {
+                  "type": "object",
+                  "$ref": "#/definitions/rest.GetMTOListResponse_Result"
+              }
+          }
+      },
+      "rest.GetMTOListResponse_Result": {
+          "type": "object",
+          "properties": {
+              "count": {
+                  "type": "integer"
+              },
+              "limit": {
+                  "type": "integer"
+              },
+              "offset": {
+                  "type": "integer"
+              },
+              "records": {
+                  "type": "array",
+                  "items": {
+                      "$ref": "#/definitions/rest.GetMTOListResponse_ResultItem"
+                  }
+              }
+          }
+      },
+      "rest.GetMTOListResponse_ResultItem": {
+          "type": "object",
+          "properties": {
+              "country": {
+                  "type": "string"
+              },
+              "currencies": {
+                  "type": "array",
+                  "items": {
+                      "type": "string"
+                  }
+              },
+              "exchangeCurrencies": {
+                  "type": "array",
+                  "items": {
+                      "type": "string"
+                  }
+              },
+              "id": {
+                  "type": "string"
+              },
+              "name": {
+                  "type": "string"
+              }
+          }
+      },
+      "rest.GetPaymentChannelListResponse": {
+          "type": "object",
+          "properties": {
+              "debug": {
+                  "description": "on debugging mode, tracing useful information for development",
+                  "type": "object"
+              },
+              "detail": {
+                  "description": "return some deep detail about response",
+                  "type": "object"
+              },
+              "message": {
+                  "description": "return friendly message to client.",
+                  "type": "object"
+              },
+              "result": {
+                  "type": "object",
+                  "$ref": "#/definitions/rest.GetPaymentChannelListResponse_Result"
+              }
+          }
+      },
+      "rest.GetPaymentChannelListResponse_Result": {
+          "type": "object",
+          "properties": {
+              "count": {
+                  "type": "integer"
+              },
+              "limit": {
+                  "type": "integer"
+              },
+              "offset": {
+                  "type": "integer"
+              },
+              "records": {
+                  "type": "object",
+                  "$ref": "#/definitions/models.PaymentChannelInfos"
+              }
+          }
+      },
+      "rest.GetRemittanceChannelListResponse_Result": {
+          "type": "object",
+          "properties": {
+              "count": {
+                  "type": "integer"
+              },
+              "limit": {
+                  "type": "integer"
+              },
+              "offset": {
+                  "type": "integer"
+              },
+              "records": {
+                  "type": "object",
+                  "$ref": "#/definitions/models.RemittanceChannels"
+              }
+          }
+      },
+      "rest.GetRemittanceTransactionHistoryResponse": {
+          "type": "object",
+          "properties": {
+              "debug": {
+                  "description": "on debugging mode, tracing useful information for development",
+                  "type": "object"
+              },
+              "detail": {
+                  "description": "return some deep detail about response",
+                  "type": "object"
+              },
+              "message": {
+                  "description": "return friendly message to client.",
+                  "type": "object"
+              },
+              "result": {
+                  "type": "object",
+                  "$ref": "#/definitions/rest.GetRemittanceTransactionHistoryResponse_Result"
+              }
+          }
+      },
+      "rest.GetRemittanceTransactionHistoryResponse_Result": {
+          "type": "object"
+      },
+      "rest.GetRemittanceTransactionListResponse": {
+          "type": "object",
+          "properties": {
+              "debug": {
+                  "description": "on debugging mode, tracing useful information for development",
+                  "type": "object"
+              },
+              "detail": {
+                  "description": "return some deep detail about response",
+                  "type": "object"
+              },
+              "message": {
+                  "description": "return friendly message to client.",
+                  "type": "object"
+              },
+              "result": {
+                  "type": "object",
+                  "$ref": "#/definitions/rest.GetRemittanceTransactionListResponse_Result"
+              }
+          }
+      },
+      "rest.GetRemittanceTransactionListResponse_Result": {
+          "type": "object",
+          "properties": {
+              "count": {
+                  "type": "integer"
+              },
+              "limit": {
+                  "type": "integer"
+              },
+              "offset": {
+                  "type": "integer"
+              },
+              "records": {
+                  "type": "object",
+                  "$ref": "#/definitions/models.Transactions"
+              }
+          }
+      },
+      "rest.GetRemittanceTransactionResponse": {
+          "type": "object",
+          "properties": {
+              "debug": {
+                  "description": "on debugging mode, tracing useful information for development",
+                  "type": "object"
+              },
+              "detail": {
+                  "description": "return some deep detail about response",
+                  "type": "object"
+              },
+              "message": {
+                  "description": "return friendly message to client.",
+                  "type": "object"
+              },
+              "result": {
+                  "type": "object",
+                  "$ref": "#/definitions/rest.GetRemittanceTransactionResponse_Result"
+              }
+          }
+      },
+      "rest.GetRemittanceTransactionResponse_Result": {
+          "type": "object",
+          "properties": {
+              "amount": {
+                  "type": "number"
+              },
+              "cashInExpiryDate": {
+                  "type": "string"
+              },
+              "cashOutCode": {
+                  "type": "string"
+              },
+              "createdAt": {
+                  "type": "string"
+              },
+              "destinationCurrency": {
+                  "type": "string"
+              },
+              "discount": {
+                  "type": "number"
+              },
+              "exchangeCurrency": {
+                  "type": "string"
+              },
+              "exchangeRate1": {
+                  "type": "number"
+              },
+              "exchangeRate2": {
+                  "type": "number"
+              },
+              "fee": {
+                  "type": "number"
+              },
+              "id": {
+                  "type": "string"
+              },
+              "orderId": {
+                  "type": "string"
+              },
+              "paymentChannelId": {
+                  "type": "string"
+              },
+              "paymentCode": {
+                  "type": "string"
+              },
+              "paymentCodeFormat": {
+                  "type": "string"
+              },
+              "paymentId": {
+                  "type": "string"
+              },
+              "receiver": {
+                  "type": "object",
+                  "$ref": "#/definitions/models.Actor"
+              },
+              "receiverId": {
+                  "type": "string"
+              },
+              "remark": {
+                  "type": "string"
+              },
+              "remittanceChannelId": {
+                  "type": "string"
+              },
+              "remittanceId": {
+                  "type": "string"
+              },
+              "sender": {
+                  "type": "object",
+                  "$ref": "#/definitions/models.Actor"
+              },
+              "senderId": {
+                  "type": "string"
+              },
+              "sourceCurrency": {
+                  "type": "string"
+              },
+              "status": {
+                  "type": "string"
+              },
+              "updatedAt": {
+                  "type": "string"
+              },
+              "updatedBy": {
+                  "type": "string"
+              },
+              "vat": {
+                  "type": "number"
+              }
+          }
+      },
+      "rest.GetTopUpWalletHistoryResponse": {
+          "type": "object",
+          "properties": {
+              "debug": {
+                  "description": "on debugging mode, tracing useful information for development",
+                  "type": "object"
+              },
+              "detail": {
+                  "description": "return some deep detail about response",
+                  "type": "object"
+              },
+              "message": {
+                  "description": "return friendly message to client.",
+                  "type": "object"
+              },
+              "result": {
+                  "type": "object",
+                  "$ref": "#/definitions/rest.GetTopUpWalletHistoryResponse_Result"
+              }
+          }
+      },
+      "rest.GetTopUpWalletHistoryResponse_Result": {
+          "type": "object"
+      },
+      "rest.GetTopUpWalletListResponse": {
+          "type": "object",
+          "properties": {
+              "debug": {
+                  "description": "on debugging mode, tracing useful information for development",
+                  "type": "object"
+              },
+              "detail": {
+                  "description": "return some deep detail about response",
+                  "type": "object"
+              },
+              "message": {
+                  "description": "return friendly message to client.",
+                  "type": "object"
+              },
+              "result": {
+                  "type": "object",
+                  "$ref": "#/definitions/rest.GetTopUpWalletListResponse_Result"
+              }
+          }
+      },
+      "rest.GetTopUpWalletListResponse_Result": {
+          "type": "object",
+          "properties": {
+              "count": {
+                  "type": "integer"
+              },
+              "limit": {
+                  "type": "integer"
+              },
+              "offset": {
+                  "type": "integer"
+              },
+              "records": {
+                  "type": "object",
+                  "$ref": "#/definitions/models.TopUps"
+              }
+          }
+      },
+      "rest.GetTopUpWalletResponse": {
+          "type": "object",
+          "properties": {
+              "debug": {
+                  "description": "on debugging mode, tracing useful information for development",
+                  "type": "object"
+              },
+              "detail": {
+                  "description": "return some deep detail about response",
+                  "type": "object"
+              },
+              "message": {
+                  "description": "return friendly message to client.",
+                  "type": "object"
+              },
+              "result": {
+                  "type": "object",
+                  "$ref": "#/definitions/rest.GetTopUpWalletResponse_Result"
+              }
+          }
+      },
+      "rest.GetTopUpWalletResponse_Result": {
+          "type": "object",
+          "properties": {
+              "amount": {
+                  "type": "number"
+              },
+              "cashInExpiryDate": {
+                  "type": "string"
+              },
+              "createdAt": {
+                  "type": "string"
+              },
+              "currency": {
+                  "type": "string"
+              },
+              "discount": {
+                  "type": "number"
+              },
+              "fee": {
+                  "type": "number"
+              },
+              "id": {
+                  "type": "string"
+              },
+              "paymentChannelId": {
+                  "type": "string"
+              },
+              "paymentCode": {
+                  "type": "string"
+              },
+              "paymentCodeFormat": {
+                  "type": "string"
+              },
+              "paymentId": {
+                  "type": "string"
+              },
+              "remark": {
+                  "type": "string"
+              },
+              "status": {
+                  "type": "string"
+              },
+              "topUpTx": {
+                  "type": "string"
+              },
+              "updatedAt": {
+                  "type": "string"
+              },
+              "updatedBy": {
+                  "type": "string"
+              },
+              "userId": {
+                  "type": "string"
+              },
+              "vat": {
+                  "type": "number"
+              },
+              "walletAddress": {
+                  "type": "string"
+              }
+          }
+      },
+      "rest.PostPaymentWebHookLNCSRequest": {
+          "type": "object",
+          "properties": {
+              "amount": {
+                  "type": "integer"
+              },
+              "currency": {
+                  "type": "string"
+              },
+              "eventType": {
+                  "type": "string"
+              },
+              "externalId": {
+                  "type": "string"
+              },
+              "id": {
+                  "type": "string"
+              },
+              "requestPayload": {
+                  "type": "object",
+                  "$ref": "#/definitions/rest.PostPaymentWebHookLNCSRequestPayload"
+              },
+              "status": {
+                  "type": "string"
+              }
+          }
+      },
+      "rest.PostPaymentWebHookLNCSRequestPayload": {
+          "type": "object",
+          "properties": {
+              "reference": {
+                  "type": "string"
+              }
+          }
+      },
+      "rest.PostPaymentWebHookLNCSResponse": {
+          "type": "object",
+          "properties": {
+              "debug": {
+                  "description": "on debugging mode, tracing useful information for development",
+                  "type": "object"
+              },
+              "detail": {
+                  "description": "return some deep detail about response",
+                  "type": "object"
+              },
+              "message": {
+                  "description": "return friendly message to client.",
+                  "type": "object"
+              },
+              "result": {
+                  "type": "object"
+              }
+          }
+      },
+      "rest.PostPaymentWebHookSNCSRequest": {
+          "type": "object",
+          "properties": {
+              "amount": {
+                  "type": "integer"
+              },
+              "currency": {
+                  "type": "string"
+              },
+              "eventType": {
+                  "type": "string"
+              },
+              "externalId": {
+                  "type": "string"
+              },
+              "id": {
+                  "type": "string"
+              },
+              "requestPayload": {
+                  "type": "object",
+                  "$ref": "#/definitions/rest.PostPaymentWebHookSNCSRequestPayload"
+              },
+              "status": {
+                  "type": "string"
+              }
+          }
+      },
+      "rest.PostPaymentWebHookSNCSRequestPayload": {
+          "type": "object",
+          "properties": {
+              "reference": {
+                  "type": "string"
+              }
+          }
+      },
+      "rest.PostPaymentWebHookSNCSResponse": {
+          "type": "object",
+          "properties": {
+              "debug": {
+                  "description": "on debugging mode, tracing useful information for development",
+                  "type": "object"
+              },
+              "detail": {
+                  "description": "return some deep detail about response",
+                  "type": "object"
+              },
+              "message": {
+                  "description": "return friendly message to client.",
+                  "type": "object"
+              },
+              "result": {
+                  "type": "object"
+              }
+          }
+      },
+      "rest.PostRemittanceTransactionRequest": {
+          "type": "object",
+          "properties": {
+              "amount": {
+                  "type": "number"
+              },
+              "destinationCurrency": {
+                  "type": "string"
+              },
+              "discount": {
+                  "type": "number"
+              },
+              "exchangeCurrency": {
+                  "type": "string"
+              },
+              "fee": {
+                  "type": "number"
+              },
+              "paymentChannel": {
+                  "type": "string"
+              },
+              "receiver": {
+                  "type": "object",
+                  "$ref": "#/definitions/rest.PostRemittanceTransactionRequest_Receiver"
+              },
+              "receiverID": {
+                  "type": "string"
+              },
+              "remark": {
+                  "type": "string"
+              },
+              "remittanceChannel": {
+                  "type": "string"
+              },
+              "sourceCurrency": {
+                  "type": "string"
+              },
+              "vat": {
+                  "type": "number"
+              }
+          }
+      },
+      "rest.PostRemittanceTransactionRequest_Receiver": {
+          "type": "object",
+          "properties": {
+              "address": {
+                  "type": "string"
+              },
+              "displayName": {
+                  "type": "string"
+              },
+              "firstName": {
+                  "type": "string"
+              },
+              "lastName": {
+                  "type": "string"
+              },
+              "middleName": {
+                  "type": "string"
+              },
+              "mobileNo": {
+                  "type": "string"
+              }
+          }
+      },
+      "rest.PostRemittanceTransactionResponse": {
+          "type": "object",
+          "properties": {
+              "debug": {
+                  "description": "on debugging mode, tracing useful information for development",
+                  "type": "object"
+              },
+              "detail": {
+                  "description": "return some deep detail about response",
+                  "type": "object"
+              },
+              "message": {
+                  "description": "return friendly message to client.",
+                  "type": "object"
+              },
+              "result": {
+                  "type": "object",
+                  "$ref": "#/definitions/rest.PostRemittanceTransactionResponse_Result"
+              }
+          }
+      },
+      "rest.PostRemittanceTransactionResponse_Result": {
+          "type": "object",
+          "properties": {
+              "amount": {
+                  "type": "number"
+              },
+              "cashInExpiryDate": {
+                  "type": "string"
+              },
+              "cashOutCode": {
+                  "type": "string"
+              },
+              "createdAt": {
+                  "type": "string"
+              },
+              "destinationCurrency": {
+                  "type": "string"
+              },
+              "discount": {
+                  "type": "number"
+              },
+              "exchangeCurrency": {
+                  "type": "string"
+              },
+              "exchangeRate1": {
+                  "type": "number"
+              },
+              "exchangeRate2": {
+                  "type": "number"
+              },
+              "fee": {
+                  "type": "number"
+              },
+              "id": {
+                  "type": "string"
+              },
+              "orderId": {
+                  "type": "string"
+              },
+              "paymentChannelId": {
+                  "type": "string"
+              },
+              "paymentCode": {
+                  "type": "string"
+              },
+              "paymentCodeFormat": {
+                  "type": "string"
+              },
+              "paymentId": {
+                  "type": "string"
+              },
+              "receiver": {
+                  "type": "object",
+                  "$ref": "#/definitions/models.Actor"
+              },
+              "receiverId": {
+                  "type": "string"
+              },
+              "remark": {
+                  "type": "string"
+              },
+              "remittanceChannelId": {
+                  "type": "string"
+              },
+              "remittanceId": {
+                  "type": "string"
+              },
+              "sender": {
+                  "type": "object",
+                  "$ref": "#/definitions/models.Actor"
+              },
+              "senderId": {
+                  "type": "string"
+              },
+              "sourceCurrency": {
+                  "type": "string"
+              },
+              "status": {
+                  "type": "string"
+              },
+              "updatedAt": {
+                  "type": "string"
+              },
+              "updatedBy": {
+                  "type": "string"
+              },
+              "vat": {
+                  "type": "number"
+              }
+          }
+      },
+      "rest.PostRemittanceWebHookLNRSRequest": {
+          "type": "object",
+          "properties": {
+              "cashOutCode": {
+                  "type": "string"
+              },
+              "eventType": {
+                  "type": "string"
+              },
+              "id": {
+                  "type": "string"
+              },
+              "reference": {
+                  "type": "string"
+              }
+          }
+      },
+      "rest.PostRemittanceWebHookLNRSResponse": {
+          "type": "object",
+          "properties": {
+              "debug": {
+                  "description": "on debugging mode, tracing useful information for development",
+                  "type": "object"
+              },
+              "detail": {
+                  "description": "return some deep detail about response",
+                  "type": "object"
+              },
+              "message": {
+                  "description": "return friendly message to client.",
+                  "type": "object"
+              },
+              "result": {
+                  "type": "object"
+              }
+          }
+      },
+      "rest.PostTopUpWalletRequest": {
+          "type": "object",
+          "properties": {
+              "amount": {
+                  "type": "number"
+              },
+              "currency": {
+                  "type": "string"
+              },
+              "discount": {
+                  "type": "number"
+              },
+              "fee": {
+                  "type": "number"
+              },
+              "paymentChannel": {
+                  "type": "string"
+              },
+              "remark": {
+                  "type": "string"
+              },
+              "vat": {
+                  "type": "number"
+              }
+          }
+      },
+      "rest.PostTopUpWalletResponse": {
+          "type": "object",
+          "properties": {
+              "debug": {
+                  "description": "on debugging mode, tracing useful information for development",
+                  "type": "object"
+              },
+              "detail": {
+                  "description": "return some deep detail about response",
+                  "type": "object"
+              },
+              "message": {
+                  "description": "return friendly message to client.",
+                  "type": "object"
+              },
+              "result": {
+                  "type": "object",
+                  "$ref": "#/definitions/rest.PostTopUpWalletResponse_Result"
+              }
+          }
+      },
+      "rest.PostTopUpWalletResponse_Result": {
+          "type": "object",
+          "properties": {
+              "amount": {
+                  "type": "number"
+              },
+              "cashInExpiryDate": {
+                  "type": "string"
+              },
+              "createdAt": {
+                  "type": "string"
+              },
+              "currency": {
+                  "type": "string"
+              },
+              "discount": {
+                  "type": "number"
+              },
+              "fee": {
+                  "type": "number"
+              },
+              "id": {
+                  "type": "string"
+              },
+              "paymentChannelId": {
+                  "type": "string"
+              },
+              "paymentCode": {
+                  "type": "string"
+              },
+              "paymentCodeFormat": {
+                  "type": "string"
+              },
+              "paymentId": {
+                  "type": "string"
+              },
+              "remark": {
+                  "type": "string"
+              },
+              "status": {
+                  "type": "string"
+              },
+              "topUpTx": {
+                  "type": "string"
+              },
+              "updatedAt": {
+                  "type": "string"
+              },
+              "updatedBy": {
+                  "type": "string"
+              },
+              "userId": {
+                  "type": "string"
+              },
+              "vat": {
+                  "type": "number"
+              },
+              "walletAddress": {
+                  "type": "string"
+              }
+          }
+      },
+      "rest.PutRemittanceTransactionRequest": {
+          "type": "object",
+          "properties": {
+              "action": {
+                  "type": "string"
+              }
+          }
+      },
+      "rest.PutRemittanceTransactionResponse": {
+          "type": "object",
+          "properties": {
+              "debug": {
+                  "description": "on debugging mode, tracing useful information for development",
+                  "type": "object"
+              },
+              "detail": {
+                  "description": "return some deep detail about response",
+                  "type": "object"
+              },
+              "message": {
+                  "description": "return friendly message to client.",
+                  "type": "object"
+              },
+              "result": {
+                  "type": "object",
+                  "$ref": "#/definitions/rest.GetRemittanceChannelListResponse_Result"
+              }
+          }
+      },
+      "rest.PutTopUpWalletRequest": {
+          "type": "object",
+          "properties": {
+              "action": {
+                  "type": "string"
+              }
+          }
+      },
+      "rest.PutTopUpWalletResponse": {
+          "type": "object",
+          "properties": {
+              "debug": {
+                  "description": "on debugging mode, tracing useful information for development",
+                  "type": "object"
+              },
+              "detail": {
+                  "description": "return some deep detail about response",
+                  "type": "object"
+              },
+              "message": {
+                  "description": "return friendly message to client.",
+                  "type": "object"
+              },
+              "result": {
+                  "type": "object",
+                  "$ref": "#/definitions/rest.PutTopUpWalletResponse_Result"
+              }
+          }
+      },
+      "rest.PutTopUpWalletResponse_Result": {
+          "type": "object",
+          "properties": {
+              "amount": {
+                  "type": "number"
+              },
+              "cashInExpiryDate": {
+                  "type": "string"
+              },
+              "createdAt": {
+                  "type": "string"
+              },
+              "currency": {
+                  "type": "string"
+              },
+              "discount": {
+                  "type": "number"
+              },
+              "fee": {
+                  "type": "number"
+              },
+              "id": {
+                  "type": "string"
+              },
+              "paymentChannelId": {
+                  "type": "string"
+              },
+              "paymentCode": {
+                  "type": "string"
+              },
+              "paymentCodeFormat": {
+                  "type": "string"
+              },
+              "paymentId": {
+                  "type": "string"
+              },
+              "remark": {
+                  "type": "string"
+              },
+              "status": {
+                  "type": "string"
+              },
+              "topUpTx": {
+                  "type": "string"
+              },
+              "updatedAt": {
+                  "type": "string"
+              },
+              "updatedBy": {
+                  "type": "string"
+              },
+              "userId": {
+                  "type": "string"
+              },
+              "vat": {
+                  "type": "number"
+              },
+              "walletAddress": {
+                  "type": "string"
+              }
+          }
+      },
+      "static.GetLanguageResponse": {
+          "type": "object",
+          "properties": {
+              "debug": {
+                  "description": "on debugging mode, tracing useful information for development",
+                  "type": "object"
+              },
+              "detail": {
+                  "description": "return some deep detail about response",
+                  "type": "object"
+              },
+              "message": {
+                  "description": "return friendly message to client.",
+                  "type": "object"
+              },
+              "result": {
+                  "type": "object",
+                  "$ref": "#/definitions/static.GetLanguageResponse_Result"
+              }
+          }
+      },
+      "static.GetLanguageResponse_Result": {
+          "type": "object",
+          "properties": {
+              "definitions": {
+                  "type": "object"
+              },
+              "languageID": {
+                  "type": "string"
+              }
+          }
+      },
+      "static.GetTermsAndAgreementResponse": {
+          "type": "object",
+          "properties": {
+              "debug": {
+                  "description": "on debugging mode, tracing useful information for development",
+                  "type": "object"
+              },
+              "detail": {
+                  "description": "return some deep detail about response",
+                  "type": "object"
+              },
+              "message": {
+                  "description": "return friendly message to client.",
+                  "type": "object"
+              },
+              "result": {
+                  "type": "object",
+                  "$ref": "#/definitions/static.GetTermsAndAgreementResponse_Result"
+              }
+          }
+      },
+      "static.GetTermsAndAgreementResponse_Result": {
+          "type": "object",
+          "properties": {
+              "content": {
+                  "type": "string"
+              },
+              "updatedAt": {
+                  "type": "string"
+              }
+          }
+      },
+      "transports.GetLanguageListResponse": {
+          "type": "object",
+          "properties": {
+              "debug": {
+                  "description": "on debugging mode, tracing useful information for development",
+                  "type": "object"
+              },
+              "detail": {
+                  "description": "return some deep detail about response",
+                  "type": "object"
+              },
+              "message": {
+                  "description": "return friendly message to client.",
+                  "type": "object"
+              },
+              "result": {
+                  "type": "object",
+                  "$ref": "#/definitions/transports.GetLanguageListResponse_Result"
+              }
+          }
+      },
+      "transports.GetLanguageListResponse_Result": {
+          "type": "object",
+          "properties": {
+              "image": {
+                  "type": "string"
+              },
+              "label": {
+                  "type": "string"
+              },
+              "tag": {
+                  "type": "string"
+              }
+          }
+      },
+      "usecases.IssueTokenInput": {
+          "type": "object",
+          "properties": {
+              "accessToken": {
+                  "description": "accessToken: session token from auth",
+                  "type": "string"
+              },
+              "boardingToken": {
+                  "description": "boardingToken: use when grant type = boardingToSession",
+                  "type": "string"
+              },
+              "deviceId": {
+                  "description": "deviceId: DeviceID of client.",
+                  "type": "string"
+              },
+              "id": {
+                  "description": "id: Reference ID of user account default is passport ID.",
+                  "type": "string"
+              },
+              "kycCode": {
+                  "description": "kycCode: KYC code from offline registration.",
+                  "type": "string"
+              },
+              "mobileNumber": {
+                  "description": "mobileNo: User mobile number that associate with passport ID.",
+                  "type": "string"
+              },
+              "otpAnswer": {
+                  "description": "otpAnswer: One time password from service send to user via SMS.",
+                  "type": "string"
+              },
+              "otpChallenge": {
+                  "description": "otpChallenge: OTPAnswer Challenge code",
+                  "type": "string"
+              },
+              "pin": {
+                  "description": "pin: require if user already set pin",
+                  "type": "string"
+              },
+              "refreshToken": {
+                  "description": "refreshToken: refresh token to renew token",
+                  "type": "string"
+              }
+          }
+      },
+      "usecases.IssueTokenOutput": {
+          "type": "object",
+          "properties": {
+              "token": {
+                  "type": "object",
+                  "$ref": "#/definitions/entities.JwtToken"
+              }
+          }
+      },
+      "user.BatchUpdateFavouriteReceiversBody": {
+          "type": "object",
+          "properties": {
+              "records": {
+                  "type": "array",
+                  "items": {
+                      "$ref": "#/definitions/user.BatchUpdateFavouriteReceiversBody_Records"
+                  }
+              }
+          }
+      },
+      "user.BatchUpdateFavouriteReceiversBody_Records": {
+          "type": "object",
+          "properties": {
+              "id": {
+                  "type": "string"
+              },
+              "weight": {
+                  "type": "integer"
+              }
+          }
+      },
+      "user.CreateUserFavouriteReceiverRequest": {
+          "type": "object",
+          "properties": {
+              "currency": {
+                  "type": "string"
+              },
+              "firstName": {
+                  "type": "string"
+              },
+              "lastName": {
+                  "type": "string"
+              },
+              "memo": {
+                  "type": "string"
+              },
+              "middleName": {
+                  "type": "string"
+              },
+              "mobileNumber": {
+                  "type": "string"
+              },
+              "mtoId": {
+                  "type": "string"
+              },
+              "userId": {
+                  "type": "string"
+              },
+              "weight": {
+                  "type": "integer"
+              }
+          }
+      },
+      "user.CreateUserFavouriteReceiverResponse": {
+          "type": "object",
+          "properties": {
+              "debug": {
+                  "description": "on debugging mode, tracing useful information for development",
+                  "type": "object"
+              },
+              "detail": {
+                  "description": "return some deep detail about response",
+                  "type": "object"
+              },
+              "message": {
+                  "description": "return friendly message to client.",
+                  "type": "object"
+              },
+              "result": {
+                  "type": "object",
+                  "$ref": "#/definitions/entities.Receiver"
+              }
+          }
+      },
+      "user.DeleteFavouriteReceiverResponse": {
+          "type": "object",
+          "properties": {
+              "debug": {
+                  "description": "on debugging mode, tracing useful information for development",
+                  "type": "object"
+              },
+              "detail": {
+                  "description": "return some deep detail about response",
+                  "type": "object"
+              },
+              "message": {
+                  "description": "return friendly message to client.",
+                  "type": "object"
+              },
+              "result": {
+                  "type": "object"
+              }
+          }
+      },
+      "user.FavouriteReceiverList_Result": {
+          "type": "object",
+          "properties": {
+              "count": {
+                  "type": "integer"
+              },
+              "limit": {
+                  "type": "integer"
+              },
+              "offset": {
+                  "type": "integer"
+              },
+              "records": {
+                  "type": "array",
+                  "items": {
+                      "$ref": "#/definitions/user.FavouriteReceiverList_ResultItem"
+                  }
+              }
+          }
+      },
+      "user.FavouriteReceiverList_ResultItem": {
+          "type": "object",
+          "properties": {
+              "firstName": {
+                  "type": "string"
+              },
+              "id": {
+                  "type": "string"
+              },
+              "lastName": {
+                  "type": "string"
+              },
+              "weight": {
+                  "type": "integer"
+              }
+          }
+      },
+      "user.GetFavouriteReceiverListResponse": {
+          "type": "object",
+          "properties": {
+              "debug": {
+                  "description": "on debugging mode, tracing useful information for development",
+                  "type": "object"
+              },
+              "detail": {
+                  "description": "return some deep detail about response",
+                  "type": "object"
+              },
+              "message": {
+                  "description": "return friendly message to client.",
+                  "type": "object"
+              },
+              "result": {
+                  "type": "object",
+                  "$ref": "#/definitions/user.FavouriteReceiverList_Result"
+              }
+          }
+      },
+      "user.GetUpdateUserProfilePictureResponse": {
+          "type": "object",
+          "properties": {
+              "debug": {
+                  "description": "on debugging mode, tracing useful information for development",
+                  "type": "object"
+              },
+              "detail": {
+                  "description": "return some deep detail about response",
+                  "type": "object"
+              },
+              "message": {
+                  "description": "return friendly message to client.",
+                  "type": "object"
+              },
+              "result": {
+                  "type": "string"
+              }
+          }
+      },
+      "user.GetUserFavouriteReceiverResponse": {
+          "type": "object",
+          "properties": {
+              "currency": {
+                  "type": "string"
+              },
+              "firstName": {
+                  "type": "string"
+              },
+              "id": {
+                  "type": "string"
+              },
+              "lastName": {
+                  "type": "string"
+              },
+              "memo": {
+                  "type": "string"
+              },
+              "middleName": {
+                  "type": "string"
+              },
+              "mobileNumber": {
+                  "type": "string"
+              },
+              "mtoId": {
+                  "type": "string"
+              },
+              "userId": {
+                  "type": "string"
+              },
+              "weight": {
+                  "type": "integer"
+              }
+          }
+      },
+      "user.GetUserProfileResponse": {
+          "type": "object",
+          "properties": {
+              "debug": {
+                  "description": "on debugging mode, tracing useful information for development",
+                  "type": "object"
+              },
+              "detail": {
+                  "description": "return some deep detail about response",
+                  "type": "object"
+              },
+              "message": {
+                  "description": "return friendly message to client.",
+                  "type": "object"
+              },
+              "result": {
+                  "type": "object",
+                  "$ref": "#/definitions/user.GetUserProfileResponse_Result"
+              }
+          }
+      },
+      "user.GetUserProfileResponse_Result": {
+          "type": "object",
+          "properties": {
+              "KYCId": {
+                  "type": "string"
+              },
+              "address": {
+                  "type": "string"
+              },
+              "dateOfBirth": {
+                  "type": "string"
+              },
+              "displayName": {
+                  "type": "string"
+              },
+              "firstName": {
+                  "type": "string"
+              },
+              "kycCode": {
+                  "type": "string"
+              },
+              "lastName": {
+                  "type": "string"
+              },
+              "middleName": {
+                  "type": "string"
+              },
+              "mobileNumber": {
+                  "type": "string"
+              },
+              "nationality": {
+                  "type": "string"
+              },
+              "passportExpiryDate": {
+                  "type": "string"
+              },
+              "passportId": {
+                  "type": "string"
+              },
+              "passportIssueDate": {
+                  "type": "string"
+              },
+              "userId": {
+                  "type": "string"
+              }
+          }
+      },
+      "user.PutMobileNumberRequest": {
+          "type": "object",
+          "properties": {
+              "mobileNumber": {
+                  "type": "string"
+              },
+              "otpAnswer": {
+                  "type": "string"
+              },
+              "otpChallenge": {
+                  "type": "string"
+              }
+          }
+      },
+      "user.UpdateUserFavouriteReceiverRequest": {
+          "type": "object",
+          "properties": {
+              "currency": {
+                  "type": "string"
+              },
+              "firstName": {
+                  "type": "string"
+              },
+              "lastName": {
+                  "type": "string"
+              },
+              "memo": {
+                  "type": "string"
+              },
+              "mobileNumber": {
+                  "type": "string"
+              },
+              "mtoId": {
+                  "type": "string"
+              },
+              "weight": {
+                  "type": "integer"
+              }
+          }
+      },
+      "user.UpdateUserFavouriteReceiverResponse": {
+          "type": "object",
+          "properties": {
+              "currency": {
+                  "type": "string"
+              },
+              "firstName": {
+                  "type": "string"
+              },
+              "id": {
+                  "type": "string"
+              },
+              "lastName": {
+                  "type": "string"
+              },
+              "memo": {
+                  "type": "string"
+              },
+              "middleName": {
+                  "type": "string"
+              },
+              "mobileNumber": {
+                  "type": "string"
+              },
+              "mtoId": {
+                  "type": "string"
+              },
+              "userId": {
+                  "type": "string"
+              },
+              "weight": {
+                  "type": "integer"
+              }
+          }
+      },
+      "user.UpdateUserProfilePictureResponse": {
+          "type": "object",
+          "properties": {
+              "debug": {
+                  "description": "on debugging mode, tracing useful information for development",
+                  "type": "object"
+              },
+              "detail": {
+                  "description": "return some deep detail about response",
+                  "type": "object"
+              },
+              "message": {
+                  "description": "return friendly message to client.",
+                  "type": "object"
+              },
+              "result": {
+                  "type": "object"
+              }
+          }
+      },
+      "user.UpdateUserProfileRequest": {
+          "type": "object",
+          "properties": {
+              "displayName": {
+                  "description": "displayName optional maximum 10 character",
+                  "type": "string"
+              }
+          }
+      },
+      "user.UserProfileResponse": {
+          "type": "object",
+          "properties": {
+              "KYCId": {
+                  "type": "string"
+              },
+              "address": {
+                  "type": "string"
+              },
+              "dateOfBirth": {
+                  "type": "string"
+              },
+              "displayName": {
+                  "type": "string"
+              },
+              "firstName": {
+                  "type": "string"
+              },
+              "kycCode": {
+                  "type": "string"
+              },
+              "lastName": {
+                  "type": "string"
+              },
+              "middleName": {
+                  "type": "string"
+              },
+              "mobileNumber": {
+                  "type": "string"
+              },
+              "nationality": {
+                  "type": "string"
+              },
+              "passportExpiryDate": {
+                  "type": "string"
+              },
+              "passportId": {
+                  "type": "string"
+              },
+              "passportIssueDate": {
+                  "type": "string"
+              },
+              "userId": {
+                  "type": "string"
+              }
+          }
+      },
+      "util.APIResponseFormat": {
+          "type": "object",
+          "properties": {
+              "debug": {
+                  "description": "on debugging mode, tracing useful information for development",
+                  "type": "object"
+              },
+              "detail": {
+                  "description": "return some deep detail about response",
+                  "type": "object"
+              },
+              "message": {
+                  "description": "return friendly message to client.",
+                  "type": "object"
+              },
+              "result": {
+                  "type": "object"
+              }
+          }
+      },
+      "util.NotNullString": {
+          "type": "object"
+      },
+      "util.NullString": {
+          "type": "object"
+      },
+      "wallet.GetWalletAddressResponse": {
+          "type": "object",
+          "properties": {
+              "debug": {
+                  "description": "on debugging mode, tracing useful information for development",
+                  "type": "object"
+              },
+              "detail": {
+                  "description": "return some deep detail about response",
+                  "type": "object"
+              },
+              "message": {
+                  "description": "return friendly message to client.",
+                  "type": "object"
+              },
+              "result": {
+                  "type": "object",
+                  "$ref": "#/definitions/wallet.GetWalletAddressResponse_Result"
+              }
+          }
+      },
+      "wallet.GetWalletAddressResponse_Result": {
+          "type": "object"
+      },
+      "wallet.GetWalletBalancesResponse": {
+          "type": "object",
+          "properties": {
+              "debug": {
+                  "description": "on debugging mode, tracing useful information for development",
+                  "type": "object"
+              },
+              "detail": {
+                  "description": "return some deep detail about response",
+                  "type": "object"
+              },
+              "message": {
+                  "description": "return friendly message to client.",
+                  "type": "object"
+              },
+              "result": {
+                  "type": "object",
+                  "$ref": "#/definitions/wallet.GetWalletBalancesResponse_Balances"
+              }
+          }
+      },
+      "wallet.GetWalletBalancesResponse_Balances": {
+          "type": "object"
+      }
+  }
+}

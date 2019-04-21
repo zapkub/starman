@@ -20,7 +20,15 @@ export class StarmanRequestStep implements StarmanStep {
     }
   }
   AddQuery(query: {[key: string]: string}) {
-    this.query = stringify(query)
+    this.query = stringify(query,"&","=",{
+      encodeURIComponent:(v) => {
+        if(/\{\{.*\}\}/.test(v)){
+          return v
+        } else {
+          return encodeURIComponent(v)
+        }
+      }
+    })
     this.request.query = Object.keys(query).map(key => {
       return {
         key,
