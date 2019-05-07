@@ -4,6 +4,7 @@ import { stringify } from 'querystring'
 export class StarmanRequestStep implements StarmanStep {
   name = ''
   test = []
+  preRequest = []
   request: StarmanStep['request'] = {
     url: '',
     method: 'GET' as StarmanRequestMethod,
@@ -68,6 +69,11 @@ export class StarmanRequestStep implements StarmanStep {
     this.test.push(test)
     return this
   }
+  AddPreRequest(preRequest: StarmanPreRequestFunc) {
+    this.preRequest.push(preRequest)
+    return this
+  }
 }
 
 export type StarmanTestFunc = (pm: any) => void
+export type StarmanPreRequestFunc = (pm: any) => void
