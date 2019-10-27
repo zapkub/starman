@@ -38,14 +38,18 @@ export default function Starman(
   if (options.environmentName) {
     env.name = options.environmentName
   }
+
   steps.forEach(p => {
     p((name, steps) => {
+
       collection.item.push({
         name: name,
         item: steps.map(CreatePostmanCollectionItemFromStarmanRequest)
       })
+
     })
   })
+
   return new Promise((resolve, reject) => {
     newman.run(
       {

@@ -8,15 +8,16 @@ export type StarmanStepObjectBody = {
 }
 export type StarmanStepRawBody = string
 export type StarmanStepBody = StarmanStepObjectBody | StarmanStepRawBody
-export type StarmanRequestMethod  = 'GET' | 'POST' | 'PUT' | 'DELETE'
+export type StarmanRequestMethod = 'GET' | 'POST' | 'PUT' | 'DELETE'
 export interface StarmanStep {
     name: string
     test: Function | Function[]
+    preRequest: Function | Function[]
     request: {
         url: string
-        query?: {key: string, value: string}[],
+        query?: { key: string, value: string }[],
         method: StarmanRequestMethod,
-        header:{
+        header: {
             key: string
             value: string
         }[]
@@ -44,6 +45,22 @@ export function CreatePostmanEnvFromStarmanEnv(envs: StarmanEnvironmentVariables
 
 }
 
+const toEvents = (name: string, func: Function | Function[]) => {
+    if (!func || (Array.isArray(func) && func.length <= 0)) {
+        return []
+    }
+
+    return [
+        {
+            listen: name,
+            script: {
+                type: "text/javascript",
+                exec: Array.isArray(func) ? func.filter(t => t).map(t => `(${t})(pm);`) : "(" + func.toString() + ")(pm)",
+            }
+        }
+    ]
+}
+
 export function CreatePostmanCollectionItemFromStarmanRequest(step: StarmanStep) {
     // Step body should be stringify
     // if body is just plain object
@@ -54,18 +71,14 @@ export function CreatePostmanCollectionItemFromStarmanRequest(step: StarmanStep)
         }
     }
 
+    const test = toEvents("test", step.test)
+    const preRequest = toEvents("prerequest", step.preRequest)
+
     return {
         name: step.name,
         event: [
-            step.test ? {
-                listen: "test",
-                script: {
-                    type: "text/javascript",
-                    exec: Array.isArray(step.test) ? step.test.filter(t => t).map(t => `(${t})(pm);`) : "(" + step.test.toString() + ")(pm)",
-                }
-            } : {
-                listen: "test",
-            },
+            ...test,
+            ...preRequest,
         ],
         request: step.request,
     }

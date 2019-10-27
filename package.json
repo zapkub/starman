@@ -1,6 +1,6 @@
 {
   "name": "@rungsikorn/starman",
-  "version": "0.0.4",
+  "version": "0.0.7",
   "description": "If we can sparkle he may land tonight",
   "main": "index.js",
   "repository": {
@@ -11,7 +11,8 @@
     "build": "tsc",
     "clean": "find -E . -regex '.*\\.(info|js|map|d\\.ts)' -not -path \"**/node_modules/*\" -not -path  \"./.next/*\" -delete",
     "test": "tsc && STARMAN_RESULT_DIR=./test node test/basic.test.js && node test/reusing.test.js",
-    "prepublish": "yarn build"
+    "prepublish": "yarn test && yarn build",
+    "release": "npm publish --access=public"
   },
   "author": "Rungsikorn.R",
   "license": "MIT",

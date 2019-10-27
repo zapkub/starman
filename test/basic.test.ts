@@ -22,12 +22,16 @@ async function start() {
           new StarmanRequestStep('Should return query').Get(
             'http://localhost:9912/some'
           )
-          .AddQuery({
-            x: "10"
-          })
-          .AddTest((pm) => {
-              pm.expect(pm.response.json().x).to.be.eql("10") 
-          })
+            .AddQuery({
+              x: "10"
+            })
+            .AddTest((pm) => {
+              pm.expect(pm.response.json().x).to.be.eql("10")
+              pm.expect(pm.environment.get("predefined")).to.be.eql("234.56")
+            })
+            .AddPreRequest((pm) => {
+              pm.environment.set("predefined", "234.56")
+            })
         ])
         runner('Google should be alive', [
           // << This is folder name

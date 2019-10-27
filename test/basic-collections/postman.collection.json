@@ -16,7 +16,16 @@
        "script": {
         "type": "text/javascript",
         "exec": [
-         "(function (pm) {\n                                    pm.expect(pm.response.json().x).to.be.eql(\"10\");\n                                })(pm);"
+         "(function (pm) {\n                                    pm.expect(pm.response.json().x).to.be.eql(\"10\");\n                                    pm.expect(pm.environment.get(\"predefined\")).to.be.eql(\"234.56\");\n                                })(pm);"
+        ]
+       }
+      },
+      {
+       "listen": "prerequest",
+       "script": {
+        "type": "text/javascript",
+        "exec": [
+         "(function (pm) {\n                                    pm.environment.set(\"predefined\", \"234.56\");\n                                })(pm);"
         ]
        }
       }
