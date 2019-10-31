@@ -1,6 +1,6 @@
 {
   "name": "@rungsikorn/starman",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "description": "If we can sparkle he may land tonight",
   "main": "index.js",
   "repository": {
@@ -8,8 +8,8 @@
     "url": "https://github.com/zapkub/starman"
   },
   "scripts": {
-    "build": "tsc",
-    "clean": "find -E . -regex '.*\\.(info|js|map|d\\.ts)' -not -path \"**/node_modules/*\" -not -path  \"./.next/*\" -delete",
+    "build": "tsc --build --clean && tsc",
+    "clean": "tsc --build --clean",
     "test": "tsc && STARMAN_RESULT_DIR=./test node test/basic.test.js && node test/reusing.test.js",
     "prepublish": "yarn test && yarn build",
     "release": "npm publish --access=public"

@@ -84,5 +84,14 @@ export default function Starman(
   })
 }
 
+export function StringVar(name: string): string {
+  return `{{${name}}}`
+}
+
+export function NumberVar(name: string): number {
+  // @ts-ignore
+  return `{{${name}}}`
+}
+
 export * from './request'
 export * from './runner'
