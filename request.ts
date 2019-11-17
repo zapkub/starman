@@ -19,7 +19,7 @@ export class StarmanRequestStep implements StarmanStep {
       this.request.url = `${this.request.url}?${this.query}`
     }
   }
-  AddQuery(query: {[key: string]: string}) {
+  AddQuery(query: {[key: string]: string | number}) {
     this.query = stringify(query,"&","=",{
       encodeURIComponent:(v) => {
         if(/\{\{.*\}\}/.test(v)){
@@ -32,7 +32,7 @@ export class StarmanRequestStep implements StarmanStep {
     this.request.query = Object.keys(query).map(key => {
       return {
         key,
-        value: query[key]
+        value: query[key] + ""
       }
     })
     this.reloadURL()

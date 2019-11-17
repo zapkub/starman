@@ -1,6 +1,7 @@
 import Starman from '..'
 import { join } from 'path'
 import { StarmanRequestStep } from '..'
+import {StringVar} from "../index";
 
 const express = require('express')
 const app = express()
@@ -36,7 +37,7 @@ async function start() {
         runner('Google should be alive', [
           // << This is folder name
           new StarmanRequestStep('Just call google.com') // << This is request name
-            .Get('https://www.{{url}}')
+            .Get(`https://www.${StringVar('url')}`)
             .AddQuery({
               test: '19'
             })
