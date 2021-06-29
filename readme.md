@@ -78,7 +78,8 @@ API Collections E2E testing
 > NPM package already has starman package so I should use another package name to publish it 😫
 
 ```
-$ npm i starman-js
+$ npm i @rungsikorn/starman
+$ yarn add @rungsikorn/starman
 ```
 
 ## Usage
