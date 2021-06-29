@@ -69,6 +69,11 @@ export function CreatePostmanCollectionItemFromStarmanRequest(step: StarmanStep)
             mode: "raw",
             raw: JSON.stringify(step.request.body)
         }
+    } else if (typeof step.request.body === 'string') {
+         step.request.body = {
+            mode: "raw",
+            raw: step.request.body
+        }
     }
 
     const test = toEvents("test", step.test)
